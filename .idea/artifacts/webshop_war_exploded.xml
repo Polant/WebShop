@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="webshop:war exploded">
+    <output-path>$PROJECT_DIR$/target/WebShop</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="webshop" />
+        </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/target/WebShop/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="javaee-facet-resources" facet="webshop/web/Web" />
+    </root>
+  </artifact>
+</component>
