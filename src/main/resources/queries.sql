@@ -1,0 +1,1 @@
+INSERT INTO clients(login, password) VALUES('antony', 'password');

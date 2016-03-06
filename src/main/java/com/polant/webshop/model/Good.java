@@ -1,4 +1,4 @@
-package com.polant.webshop;
+package com.polant.webshop.model;
 
 import java.util.Date;
 

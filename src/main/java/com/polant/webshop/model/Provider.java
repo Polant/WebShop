@@ -1,4 +1,4 @@
-package com.polant.webshop;
+package com.polant.webshop.model;
 
 /**
  * Created by Antony on 05.03.2016.
