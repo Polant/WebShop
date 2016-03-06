@@ -126,4 +126,21 @@ public class Good {
     public void setInStock(boolean inStock) {
         isInStock = inStock;
     }
+
+    @Override
+    public String toString() {
+        return "Good{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", category='" + category + '\'' +
+                ", color='" + color + '\'' +
+                ", providerId=" + providerId +
+                ", manufacturerName='" + manufacturerName + '\'' +
+                ", manufacturedDate=" + manufacturedDate +
+                ", deliveryDate=" + deliveryDate +
+                ", isInStock=" + isInStock +
+                '}';
+    }
 }

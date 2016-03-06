@@ -1,8 +1,8 @@
 package com.polant.webshop.data;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import com.polant.webshop.model.Client;
+
+import java.sql.*;
 
 /**
  * Created by Antony on 06.03.2016.
@@ -10,22 +10,20 @@ import java.sql.SQLException;
 public class JdbcStorage {
 
     public static void main(String[] args) {
-        Connection connection;
-        try {
-            JdbcProperties properties = JdbcProperties.getInstance();
-//            DriverManager.registerDriver((Driver) Class.forName(properties.getProperty("jdbc.driver_class")).newInstance());
+        JdbcProperties prop = JdbcProperties.getInstance();
 
-            connection = DriverManager.getConnection(properties.getProperty("jdbc.url"),
-                    properties.getProperty("jdbc.username"),
-                    properties.getProperty("jdbc.password"));
+        try(Connection connection = DriverManager.getConnection(prop.getProperty("jdbc.url"), prop.getProperty("jdbc.username"),
+                prop.getProperty("jdbc.password")); Statement statement = connection.createStatement()) {
 
-
-            if (!connection.isClosed()){
-                System.out.println("connection open");
-            }
-            connection.close();
-            if (connection.isClosed()){
-                System.out.println("connection close");
+            ResultSet result = statement.executeQuery("SELECT * FROM clients;");
+            while (result.next()){
+                Client c = new Client(
+                        result.getInt("id"),
+                        result.getString("login"),
+                        result.getString("password"),
+                        result.getString("email"),
+                        result.getBoolean("isActive"));
+                System.out.println(c);
             }
 
         }catch (SQLException e) {
