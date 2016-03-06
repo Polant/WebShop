@@ -3,20 +3,22 @@ package com.polant.webshop.model;
 /**
  * Created by Antony on 05.03.2016.
  */
-public class Client {
+public class User {
 
     private int id;
     private String login;
     private String password;
     private String email;
-    private boolean isActive;
+    private boolean isBanned;
+    private boolean isAdmin;
 
-    public Client(int id, String login, String password, String email, boolean isActive) {
+    public User(int id, String login, String password, String email, boolean isBanned, boolean isAdmin) {
         this.id = id;
         this.login = login;
         this.password = password;
         this.email = email;
-        this.isActive = isActive;
+        this.isBanned = isBanned;
+        this.isAdmin = isAdmin;
     }
 
     public int getId() {
@@ -51,22 +53,31 @@ public class Client {
         this.email = email;
     }
 
-    public boolean isActive() {
-        return isActive;
+    public boolean isBanned() {
+        return isBanned;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public void setBanned(boolean banned) {
+        isBanned = banned;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 
     @Override
     public String toString() {
-        return "Client{" +
+        return "User{" +
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
-                ", isActive=" + isActive +
+                ", isBanned=" + isBanned +
+                ", isAdmin=" + isAdmin +
                 '}';
     }
 }

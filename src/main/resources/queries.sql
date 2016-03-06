@@ -1,1 +1,1 @@
-INSERT INTO clients(login, password) VALUES('antony', 'password');
+INSERT INTO users(login, password) VALUES('antony', 'password');

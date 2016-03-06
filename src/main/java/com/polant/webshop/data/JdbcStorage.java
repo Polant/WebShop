@@ -1,6 +1,6 @@
 package com.polant.webshop.data;
 
-import com.polant.webshop.model.Client;
+import com.polant.webshop.model.User;
 
 import java.sql.*;
 
@@ -15,14 +15,15 @@ public class JdbcStorage {
         try(Connection connection = DriverManager.getConnection(prop.getProperty("jdbc.url"), prop.getProperty("jdbc.username"),
                 prop.getProperty("jdbc.password")); Statement statement = connection.createStatement()) {
 
-            ResultSet result = statement.executeQuery("SELECT * FROM clients;");
+            ResultSet result = statement.executeQuery("SELECT * FROM users;");
             while (result.next()){
-                Client c = new Client(
+                User c = new User(
                         result.getInt("id"),
                         result.getString("login"),
                         result.getString("password"),
                         result.getString("email"),
-                        result.getBoolean("isActive"));
+                        result.getBoolean("isBanned"),
+                        result.getBoolean("isAdmin"));
                 System.out.println(c);
             }
 
