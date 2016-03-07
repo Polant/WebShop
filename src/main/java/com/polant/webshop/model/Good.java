@@ -22,10 +22,10 @@ public class Good {
     private Date manufacturedDate;
     private Date deliveryDate;
 
-    private boolean isInStock;
+    private int countLeft;
 
     public Good(int id, String name, String description, double price, String category, String color,
-                int providerId, String manufacturerName, Date manufacturedDate, Date deliveryDate, boolean isInStock) {
+                int providerId, String manufacturerName, Date manufacturedDate, Date deliveryDate, int countLeft) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -36,7 +36,7 @@ public class Good {
         this.manufacturerName = manufacturerName;
         this.manufacturedDate = manufacturedDate;
         this.deliveryDate = deliveryDate;
-        this.isInStock = isInStock;
+        this.countLeft = countLeft;
     }
 
     public int getId() {
@@ -119,12 +119,12 @@ public class Good {
         this.deliveryDate = deliveryDate;
     }
 
-    public boolean isInStock() {
-        return isInStock;
+    public int getCountLeft() {
+        return countLeft;
     }
 
-    public void setInStock(boolean inStock) {
-        isInStock = inStock;
+    public void setCountLeft(int countLeft) {
+        this.countLeft = countLeft;
     }
 
     @Override
@@ -140,7 +140,7 @@ public class Good {
                 ", manufacturerName='" + manufacturerName + '\'' +
                 ", manufacturedDate=" + manufacturedDate +
                 ", deliveryDate=" + deliveryDate +
-                ", isInStock=" + isInStock +
+                ", countLeft=" + countLeft +
                 '}';
     }
 }
