@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
     <title>Web Shop</title>
@@ -88,7 +89,28 @@
 
 </div>
 
-
+<table border="1">
+    <tr>
+        <td>Название товара</td>
+        <td>Описание</td>
+        <td>Цена</td>
+        <td>Категория</td>
+        <td>Цвет</td>
+        <td>Производитель</td>
+        <td>Дата производства</td>
+        <td>На складе (шт.)</td>
+    </tr>
+    <c:forEach items="${goods}" var="good" varStatus="status">
+        <td>${good.name}</td>
+        <td>${good.description}</td>
+        <td>${good.price}</td>
+        <td>${good.category}</td>
+        <td>${good.color}</td>
+        <td>${good.manufacturerName}</td>
+        <td>${good.manufacturedDate}</td>
+        <td>${good.countLeft}</td>
+    </c:forEach>
+</table>
 
 </body>
 </html>
