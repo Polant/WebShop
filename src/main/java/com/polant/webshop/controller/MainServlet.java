@@ -1,5 +1,7 @@
 package com.polant.webshop.controller;
 
+import com.polant.webshop.data.JdbcStorage;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,8 +15,11 @@ import java.io.IOException;
 @WebServlet("/")
 public class MainServlet extends HttpServlet {
 
+    private final JdbcStorage storage = JdbcStorage.getInstance();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("goods", storage.getGoods());
         req.getRequestDispatcher("/view/main.jsp").forward(req, resp);
     }
 }
