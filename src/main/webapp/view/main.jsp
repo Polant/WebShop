@@ -15,7 +15,7 @@
 <div id="filter_form" style="float:left;">
 
     <form action="${pageContext.servletContext.contextPath}/" method="POST">
-        <fieldset>
+        <fieldset style="background-color: limegreen;">
             <legend>
                 Фильтр
             </legend>
@@ -87,6 +87,8 @@
     </form>
 
 </div>
+
+
 
 </body>
 </html>
