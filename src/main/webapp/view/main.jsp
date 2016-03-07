@@ -101,14 +101,16 @@
         <td>На складе (шт.)</td>
     </tr>
     <c:forEach items="${goods}" var="good" varStatus="status">
-        <td>${good.name}</td>
-        <td>${good.description}</td>
-        <td>${good.price}</td>
-        <td>${good.category}</td>
-        <td>${good.color}</td>
-        <td>${good.manufacturerName}</td>
-        <td>${good.manufacturedDate}</td>
-        <td>${good.countLeft}</td>
+        <tr>
+            <td>${good.name}</td>
+            <td>${good.description}</td>
+            <td>${good.price}</td>
+            <td>${good.category}</td>
+            <td>${good.color}</td>
+            <td>${good.manufacturerName}</td>
+            <td>${good.manufacturedDate}</td>
+            <td>${good.countLeft}</td>
+        </tr>
     </c:forEach>
 </table>
 
