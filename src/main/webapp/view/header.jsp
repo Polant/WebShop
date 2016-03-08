@@ -15,14 +15,16 @@
                 Авторизация
             </legend>
 
+            <%--Сохраняю текущий URL, чтобы после авторзации или вызода из системы вернуться к нему--%>
+            <input type="hidden" name="lastURL"
+                   value="${requestScope['javax.servlet.forward.request_uri']}?${pageContext.request.queryString}" />
+
             <c:if test="${not empty login}">
-                <p>Здравствуйте, ${login}</p>
+                <p>Здравствуйте, ${login}</p><br />
+                <input type="hidden" name="log_out" value="true">
+                <input type="submit" value="Выйти" />
             </c:if>
             <c:if test="${empty login}">
-                <%--Сохраняю текущий URL, чтобы после авторзации вернуться к нему--%>
-                <input type="hidden" name="lastURL"
-                       value="${requestScope['javax.servlet.forward.request_uri']}?${pageContext.request.queryString}" />
-
                 <label for="login">Логин: </label><br />
                 <input type="text" id="login" name="login" value="" /><br />
                 <label for="password">Пароль: </label><br />
