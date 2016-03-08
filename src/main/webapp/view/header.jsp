@@ -15,7 +15,7 @@
 
 <div id="authorization_form" style="float:right;">
 
-    <form action="${pageContext.servletContext.contextPath}/" method="POST">
+    <form action="${requestScope['javax.servlet.forward.request_uri']}?${pageContext.request.queryString}&newSession=true" method="POST">
         <fieldset style="background-color: goldenrod">
             <legend>
                 Авторизация
