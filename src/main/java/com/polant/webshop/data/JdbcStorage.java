@@ -33,9 +33,25 @@ public class JdbcStorage {
         return INSTANCE;
     }
 
-    public boolean checkLogin(String login, String password){
-        //TODO: реализовать проверку логина и пароля.
-        return true;
+    /**
+     * @return id of matched user
+     */
+    public int checkLogin(String login, String password){
+        try(Connection connection = DriverManager.getConnection(prop.getProperty("jdbc.url"), prop.getProperty("jdbc.username"),
+                prop.getProperty("jdbc.password"));
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE login=? AND password=?")) {
+
+            statement.setString(1, login);
+            statement.setString(2, password);
+
+            ResultSet result = statement.executeQuery();
+            if (result.next()){
+                return result.getInt("id");
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     public Good findGoodById(int id){

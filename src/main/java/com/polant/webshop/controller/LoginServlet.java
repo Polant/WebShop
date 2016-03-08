@@ -21,6 +21,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //TODO:реализовать хранение хешей, а не оригинальных паролей и логинов.
+
         //Выход из системы.
         if (req.getParameter("log_out") != null){
             HttpSession session = req.getSession(false);
@@ -31,9 +32,11 @@ public class LoginServlet extends HttpServlet {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
         if (login != null && password != null){
-            if (storage.checkLogin(login, password)){
+            int userId;
+            if ((userId = storage.checkLogin(login, password)) > 0){
                 HttpSession newSession = req.getSession(true);
                 newSession.setAttribute("login", login);
+                newSession.setAttribute("user_id", userId);
             }
         }
         else{
