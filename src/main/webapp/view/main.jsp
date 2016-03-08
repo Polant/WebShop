@@ -89,6 +89,8 @@
 
 </div>
 
+<jsp:include page="header.jsp"/>
+
 <table border="1">
     <tr>
         <td>Название товара</td>
