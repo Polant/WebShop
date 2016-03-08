@@ -102,7 +102,7 @@
     </tr>
     <c:forEach items="${goods}" var="good" varStatus="status">
         <tr>
-            <td><a href="${pageContext.servletContext.contextPath}/good/show?id=${good.id}">${good.name}</a></td>
+            <td><a href="${pageContext.servletContext.contextPath}/good/show?good_id=${good.id}">${good.name}</a></td>
             <td>${good.price}</td>
             <td>${good.category}</td>
             <td>${good.color}</td>

@@ -12,66 +12,63 @@
 </head>
 <body>
 
+<jsp:include page="header.jsp"/>
 
 <h2 style="align-content: center">${good.name}</h2>
 
-<jsp:include page="header.jsp"/>
+<form action="${pageContext.servletContext.contextPath}/good/show" method="post">
 
-<table border="1">
-    <%--<tr>--%>
-        <%--<td>Название товара</td>--%>
-        <%--<td>${good.name}</td>--%>
-    <%--</tr>--%>
-    <tr>
-        <td>Описание</td>
-        <td>${good.description}</td>
-    </tr>
-    <tr>
-        <td>Цена</td>
-        <td>${good.price}$</td>
-    </tr>
-    <tr>
-        <td>Категория</td>
-        <td>${good.category}</td>
-    </tr>
-    <tr>
-        <td>Цвет</td>
-        <td>${good.color}</td>
-    </tr>
-    <%--<tr>--%>
-        <%--<td>Поставщик</td>--%>
-        <%--<td>${good.providerId}</td>--%>
-    <%--</tr>--%>
-    <tr>
-        <td>Производитель</td>
-        <td>${good.manufacturerName}</td>
-    </tr>
-    <tr>
-        <td>Дата производства</td>
-        <td>${good.manufacturedDate}</td>
-    </tr>
-    <tr>
-        <td>Дата поставки</td>
-        <td>${good.deliveryDate}</td>
-    </tr>
-    <tr>
-        <td>Осталось в наличии</td>
-        <td>${good.countLeft} шт.</td>
-    </tr>
+    <input type="hidden" name="good_id" value="${good.id}" />
 
-<%--<form>--%>
-    <%--<label for="name">Название </label>--%>
-    <%--<input type="text" id="name" name="category" /><br />--%>
-    <%--<label for="description">Описание </label>--%>
-    <%--<input type="text" id="description" value="tablets" /><br />--%>
-    <%--<label for="price">Цена </label>--%>
-    <%--<input type="text" id="price" value="pc" /><br />--%>
-    <%--<label for="category">Категория</label>--%>
-    <%--<input type="text" id="category" value="tv" /><br />--%>
-<%--</form>--%>
+    <table border="1" bgcolor="#f5deb3">
+        <%--<tr>--%>
+            <%--<td>Название товара</td>--%>
+            <%--<td>${good.name}</td>--%>
+        <%--</tr>--%>
+        <tr>
+            <td>Описание</td>
+            <td>${good.description}</td>
+        </tr>
+        <tr>
+            <td>Цена</td>
+            <td>${good.price}$</td>
+        </tr>
+        <tr>
+            <td>Категория</td>
+            <td>${good.category}</td>
+        </tr>
+        <tr>
+            <td>Цвет</td>
+            <td>${good.color}</td>
+        </tr>
+        <%--<tr>--%>
+            <%--<td>Поставщик</td>--%>
+            <%--<td>${good.providerId}</td>--%>
+        <%--</tr>--%>
+        <tr>
+            <td>Производитель</td>
+            <td>${good.manufacturerName}</td>
+        </tr>
+        <tr>
+            <td>Дата производства</td>
+            <td>${good.manufacturedDate}</td>
+        </tr>
+        <tr>
+            <td>Дата поставки</td>
+            <td>${good.deliveryDate}</td>
+        </tr>
+        <tr>
+            <td>Осталось в наличии</td>
+            <td>${good.countLeft} шт.</td>
+        </tr>
 
+    </table><br/><br/>
 
-</table>
+    <label for="quantity">Количество: </label>
+    <input type="text" id="quantity" name="quantity" value="1">
+    <input type="submit" value="Купить" />
+
+</form>
 
 
 </body>

@@ -19,7 +19,7 @@ public class GoodServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("good", storage.findGoodById(Integer.valueOf(req.getParameter("id"))));
+        req.setAttribute("good", storage.findGoodById(Integer.valueOf(req.getParameter("good_id"))));
         req.getRequestDispatcher("/view/selected_good.jsp").forward(req, resp);
     }
 }
