@@ -94,23 +94,19 @@
 <table border="1">
     <tr>
         <td>Название товара</td>
-        <td>Описание</td>
         <td>Цена</td>
         <td>Категория</td>
         <td>Цвет</td>
         <td>Производитель</td>
-        <td>Дата производства</td>
         <td>На складе (шт.)</td>
     </tr>
     <c:forEach items="${goods}" var="good" varStatus="status">
         <tr>
-            <td>${good.name}</td>
-            <td>${good.description}</td>
+            <td><a href="${pageContext.servletContext.contextPath}/good/show?id=${good.id}">${good.name}</a></td>
             <td>${good.price}</td>
             <td>${good.category}</td>
             <td>${good.color}</td>
             <td>${good.manufacturerName}</td>
-            <td>${good.manufacturedDate}</td>
             <td>${good.countLeft}</td>
         </tr>
     </c:forEach>

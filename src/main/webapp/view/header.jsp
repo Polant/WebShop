@@ -26,7 +26,6 @@
             <label for="password">Пароль: </label><br />
             <input type="password" id="password" value="" /><br /><br />
 
-
             <input type="submit" value="Войти" />
             <input type="reset" value="Сбросить" />
 
