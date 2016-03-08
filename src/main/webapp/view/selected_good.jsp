@@ -18,10 +18,10 @@
 <jsp:include page="header.jsp"/>
 
 <table border="1">
-    <tr>
-        <td>Название товара</td>
-        <td>${good.name}</td>
-    </tr>
+    <%--<tr>--%>
+        <%--<td>Название товара</td>--%>
+        <%--<td>${good.name}</td>--%>
+    <%--</tr>--%>
     <tr>
         <td>Описание</td>
         <td>${good.description}</td>

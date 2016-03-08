@@ -13,23 +13,58 @@ public class JdbcStorage {
 
     private static final JdbcStorage INSTANCE = new JdbcStorage();
 
+    private JdbcProperties prop = JdbcProperties.getInstance();
+
+    public static final String TABLE_GOODS = "goods";
+    public static final String TABLE_ORDER_ITEMS = "order_items";
+    public static final String TABLE_ORDERS = "orders";
+    public static final String TABLE_PROVIDERS = "providers";
+    public static final String TABLE_USERS = "users";
+
     private JdbcStorage(){
+        try {
+            Class.forName(prop.getProperty("jdbc.driver_class"));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public static JdbcStorage getInstance(){
         return INSTANCE;
     }
 
-    public List<Good> getGoods(){
-        JdbcProperties prop = JdbcProperties.getInstance();
+    public Good findGoodById(int id){
+        try(Connection connection = DriverManager.getConnection(prop.getProperty("jdbc.url"), prop.getProperty("jdbc.username"),
+                prop.getProperty("jdbc.password"));
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM goods WHERE id=?")) {
 
-        List<Good> goods = new ArrayList<>();
+            statement.setInt(1, id);
 
-        try {
-            Class.forName(prop.getProperty("jdbc.driver_class"));
-        } catch (ClassNotFoundException e) {
+            ResultSet result = statement.executeQuery();
+            if (result.next()){
+                return new Good(
+                        result.getInt("id"),
+                        result.getString("name"),
+                        result.getString("description"),
+                        result.getDouble("price"),
+                        result.getString("category"),
+                        result.getString("color"),
+                        result.getInt("provider_id"),
+                        result.getString("manufacturer_name"),
+                        result.getDate("manufacturing_date"),
+                        result.getDate("delivery_date"),
+                        result.getInt("count_left")
+                );
+            }
+        }catch (SQLException e) {
             e.printStackTrace();
         }
+        return null;
+    }
+
+    public List<Good> getGoods(){
+
+        List<Good> goods = new ArrayList<>();
 
         try(Connection connection = DriverManager.getConnection(prop.getProperty("jdbc.url"), prop.getProperty("jdbc.username"),
                 prop.getProperty("jdbc.password")); Statement statement = connection.createStatement()) {
