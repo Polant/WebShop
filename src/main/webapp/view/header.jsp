@@ -1,11 +1,5 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Antony
-  Date: 08.03.2016
-  Time: 11:07
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Авторизация</title>
@@ -15,19 +9,28 @@
 
 <div id="authorization_form" style="float:right;">
 
-    <form action="${requestScope['javax.servlet.forward.request_uri']}?${pageContext.request.queryString}&newSession=true" method="POST">
+    <form action="${pageContext.servletContext.contextPath}/user/login" method="POST">
         <fieldset style="background-color: goldenrod">
             <legend>
                 Авторизация
             </legend>
 
-            <label for="login">Логин: </label><br />
-            <input type="text" id="login" value="" /><br />
-            <label for="password">Пароль: </label><br />
-            <input type="password" id="password" value="" /><br /><br />
+            <c:if test="${not empty login}">
+                <p>Здравствуйте, ${login}</p>
+            </c:if>
+            <c:if test="${empty login}">
+                <%--Сохраняю текущий URL, чтобы после авторзации вернуться к нему--%>
+                <input type="hidden" name="lastURL"
+                       value="${requestScope['javax.servlet.forward.request_uri']}?${pageContext.request.queryString}" />
 
-            <input type="submit" value="Войти" />
-            <input type="reset" value="Сбросить" />
+                <label for="login">Логин: </label><br />
+                <input type="text" id="login" name="login" value="" /><br />
+                <label for="password">Пароль: </label><br />
+                <input type="password" id="password" name="password" value="" /><br /><br />
+
+                <input type="submit" value="Войти" />
+                <input type="reset" value="Сбросить" />
+            </c:if>
 
         </fieldset>
 

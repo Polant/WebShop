@@ -62,11 +62,11 @@
     <c:choose>
         <c:when test="${good.countLeft > 0}">
             <input type="text" id="quantity" name="quantity" value="1">
-            <input type="submit" value="Купить" />
+            <input type="submit" value="Добавить в корзину" />
         </c:when>
         <c:otherwise>
             <input type="text" id="quantity" name="quantity" value="0" disabled>
-            <input type="submit" value="Купить" disabled/>
+            <input type="submit" value="Добавить в корзину" disabled/>
         </c:otherwise>
     </c:choose>
 

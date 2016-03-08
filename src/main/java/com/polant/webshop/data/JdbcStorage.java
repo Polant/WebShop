@@ -33,6 +33,11 @@ public class JdbcStorage {
         return INSTANCE;
     }
 
+    public boolean checkLogin(String login, String password){
+        //TODO: реализовать проверку логина и пароля.
+        return true;
+    }
+
     public Good findGoodById(int id){
         try(Connection connection = DriverManager.getConnection(prop.getProperty("jdbc.url"), prop.getProperty("jdbc.username"),
                 prop.getProperty("jdbc.password"));
@@ -63,7 +68,6 @@ public class JdbcStorage {
     }
 
     public List<Good> getGoods(){
-
         List<Good> goods = new ArrayList<>();
 
         try(Connection connection = DriverManager.getConnection(prop.getProperty("jdbc.url"), prop.getProperty("jdbc.username"),
@@ -86,7 +90,6 @@ public class JdbcStorage {
                 );
                 goods.add(good);
             }
-
         }catch (SQLException e) {
             e.printStackTrace();
         }
