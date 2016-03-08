@@ -1,11 +1,5 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Antony
-  Date: 08.03.2016
-  Time: 11:47
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>${good.name}</title>
@@ -65,8 +59,16 @@
     </table><br/><br/>
 
     <label for="quantity">Количество: </label>
-    <input type="text" id="quantity" name="quantity" value="1">
-    <input type="submit" value="Купить" />
+    <c:choose>
+        <c:when test="${good.countLeft > 0}">
+            <input type="text" id="quantity" name="quantity" value="1">
+            <input type="submit" value="Купить" />
+        </c:when>
+        <c:otherwise>
+            <input type="text" id="quantity" name="quantity" value="0" disabled>
+            <input type="submit" value="Купить" disabled/>
+        </c:otherwise>
+    </c:choose>
 
 </form>
 
