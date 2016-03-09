@@ -25,6 +25,7 @@ public class JdbcStorage {
     public static final String TABLE_USERS = "users";
 
     public static final String ORDER_REGISTERED = "зарегистрирован";
+    public static final String ORDER_CANCELLED = "не подтвержден";
 
     private JdbcStorage(){
         try {
@@ -226,12 +227,14 @@ public class JdbcStorage {
     /**
      * Оплата платежа пользователем. Просто меняю статус платежа == ORDER_REGISTERED (см. константу).
      * Поставить статус 'оплачено' может только администратор.
+     *
+     * @param isPay true - если идет оплата, false - если идет отмена оплаты.
      */
-    public int payForOrder(int orderId) {
+    public int payForOrder(int orderId, boolean isPay) {
         try(Connection connection = this.getConnection();
             PreparedStatement statement = connection.prepareStatement("UPDATE orders SET status=? WHERE id=?")) {
 
-            statement.setString(1, ORDER_REGISTERED);
+            statement.setString(1, isPay ? ORDER_REGISTERED : ORDER_CANCELLED);
             statement.setInt(2, orderId);
 
             return statement.executeUpdate();

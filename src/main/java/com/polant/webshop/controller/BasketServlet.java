@@ -26,6 +26,8 @@ public class BasketServlet extends HttpServlet {
     private static final String ORDER_GOODS_ATTRIBUTE_JSP = "orderGoods";
     private static final String JSP_PAGE = "/view/basket.jsp";
 
+    private static final String IS_PAYED = "IS_PAYED";
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
@@ -34,24 +36,37 @@ public class BasketServlet extends HttpServlet {
             //Если идет оплата платежа.
             if (Boolean.valueOf(req.getParameter("pay_for_order"))) {
                 int orderId = Integer.valueOf(req.getParameter("order_id"));
-                storage.payForOrder(orderId);
+                storage.payForOrder(orderId, true);
 
                 req.setAttribute(ORDER_ATTRIBUTE_JSP, storage.findOrderById(orderId));
                 req.setAttribute(ORDER_GOODS_ATTRIBUTE_JSP, storage.getAllOrderInfo(orderId));
+                req.setAttribute(IS_PAYED, true);
+
+                req.getRequestDispatcher(JSP_PAGE).forward(req, resp);
+            }
+            else if (Boolean.valueOf(req.getParameter("cancel_pay_for_order"))) {//идет отмена оплаты.
+                int orderId = Integer.valueOf(req.getParameter("order_id"));
+                storage.payForOrder(orderId, false);
+
+                req.setAttribute(ORDER_ATTRIBUTE_JSP, storage.findOrderById(orderId));
+                req.setAttribute(ORDER_GOODS_ATTRIBUTE_JSP, storage.getAllOrderInfo(orderId));
+                req.setAttribute(IS_PAYED, false);
 
                 req.getRequestDispatcher(JSP_PAGE).forward(req, resp);
             }
             else {//Если идет добавка товара в корзину.
                 Good newGood = storage.findGoodById(Integer.valueOf(req.getParameter("good_id")));
                 addToBasket(req, session, newGood);
+
+                req.setAttribute(IS_PAYED, false);
                 req.getRequestDispatcher(JSP_PAGE).forward(req, resp);
             }
         }
     }
 
     private void addToBasket(HttpServletRequest req, HttpSession session, Good newGood) {
-        List<ComplexOrderGoodsItem> goodsList;
 
+        List<ComplexOrderGoodsItem> goodsList;
         int userId = (int) session.getAttribute("user_id");
         int quantity = Integer.valueOf(req.getParameter("quantity"));
 
