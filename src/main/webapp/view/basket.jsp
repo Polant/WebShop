@@ -5,6 +5,11 @@
     <title>Title</title>
 </head>
 <body>
+
+<jsp:include page="header.jsp" />
+
+<h2>Моя корзина</h2>
+
 <table border="1">
     <tr>
         <td>Название товара</td>

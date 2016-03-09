@@ -2,7 +2,6 @@ package com.polant.webshop.controller;
 
 import com.polant.webshop.data.JdbcStorage;
 import com.polant.webshop.model.Good;
-import com.polant.webshop.model.Order;
 import com.polant.webshop.model.OrderItem;
 import com.polant.webshop.model.complex.OrderGood;
 
@@ -26,20 +25,37 @@ public class BasketServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        addToBasket(req);
+        req.getRequestDispatcher("/view/basket.jsp").forward(req, resp);
+    }
+
+    private void addToBasket(HttpServletRequest req){
         Good newGood = storage.findGoodById(Integer.valueOf(req.getParameter("good_id")));
 
         HttpSession session = req.getSession(false);
         if (session != null && !session.isNew()) {
-            OrderItem orderItem = storage.createOrder(
-                    newGood, (int)session.getAttribute("user_id"), Integer.valueOf(req.getParameter("quantity")));
 
-            session.setAttribute("current_order_id", orderItem.getOrderId());
+            List<OrderGood> goodsList;
 
-            List<OrderGood> goodsList = new ArrayList<>(1);
-            goodsList.add(new OrderGood(newGood, orderItem));
+            int userId = (int) session.getAttribute("user_id");
+            int quantity = Integer.valueOf(req.getParameter("quantity"));
+            
+            //Если создаю новый заказ.
+            if (session.getAttribute("current_order_id") == null) {
+                OrderItem orderItem = storage.createNewOrder(newGood, userId, quantity);
+
+                session.setAttribute("current_order_id", orderItem.getOrderId());
+
+                goodsList = new ArrayList<>();
+                goodsList.add(new OrderGood(newGood, orderItem));
+            }
+            else {
+                //Если добавляю новый товар к существующему заказу.
+                goodsList = storage.addGoodToOrder((int) session.getAttribute("current_order_id"), newGood, quantity);
+            }
+            //TODO: сделать обработку случая, когда на складе недостаточно товаров.
             req.setAttribute("orderGoods", goodsList);
         }
-        req.getRequestDispatcher("/view/basket.jsp").forward(req, resp);
     }
 
 }
