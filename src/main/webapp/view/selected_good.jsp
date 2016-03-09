@@ -10,15 +10,11 @@
 
 <h2 style="align-content: center">${good.name}</h2>
 
-<form action="${pageContext.servletContext.contextPath}/good/show" method="post">
+<form action="${pageContext.servletContext.contextPath}/user/basket" method="post">
 
     <input type="hidden" name="good_id" value="${good.id}" />
 
     <table border="1" bgcolor="#f5deb3">
-        <%--<tr>--%>
-            <%--<td>Название товара</td>--%>
-            <%--<td>${good.name}</td>--%>
-        <%--</tr>--%>
         <tr>
             <td>Описание</td>
             <td>${good.description}</td>

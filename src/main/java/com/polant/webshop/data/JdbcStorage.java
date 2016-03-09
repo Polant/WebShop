@@ -1,6 +1,8 @@
 package com.polant.webshop.data;
 
 import com.polant.webshop.model.Good;
+import com.polant.webshop.model.Order;
+import com.polant.webshop.model.OrderItem;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -110,5 +112,38 @@ public class JdbcStorage {
             e.printStackTrace();
         }
         return goods;
+    }
+
+    public OrderItem createOrder(Good newGood, int user_id, int quantity) {
+        try(Connection connection = DriverManager.getConnection(prop.getProperty("jdbc.url"), prop.getProperty("jdbc.username"), prop.getProperty("jdbc.password"));
+            Statement statement = connection.createStatement()) {
+
+            //Создаю сам заказ.
+            statement.execute(String.format("INSERT INTO orders(user_id, order_date) VALUES(%d, CURDATE())", user_id));
+
+            ResultSet ordersSet = statement.executeQuery("SELECT * FROM orders GROUP BY id HAVING id=MAX(id)");
+            if (ordersSet.next()){
+                //Получаю Id только что добавленного в базу заказа.
+                int orderId = ordersSet.getInt("id");
+
+                //Добавляю товар в заказ.
+                statement.execute(String.format("INSERT INTO order_items(order_id, good_id, quantity) VALUES(%d, %d, %d)",
+                        orderId, newGood.getId(),quantity));
+
+                //Получаю объект только что добавленного в базу товара заказа.
+                ResultSet orderItemsSet = statement.executeQuery("SELECT * FROM order_items GROUP BY id HAVING id=MAX(id)");
+                if (orderItemsSet.next()){
+                    return new OrderItem(
+                            orderItemsSet.getInt("id"),
+                            orderItemsSet.getInt("order_id"),
+                            orderItemsSet.getInt("good_id"),
+                            orderItemsSet.getInt("quantity")
+                    );
+                }
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

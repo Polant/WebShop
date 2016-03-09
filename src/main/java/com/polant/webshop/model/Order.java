@@ -9,13 +9,13 @@ public class Order {
 
     private int id;
     private String status;
-    private int clientId;
+    private int userId;
     private Date orderDate;
 
-    public Order(int id, String status, int clientId, Date orderDate) {
+    public Order(int id, String status, int userId, Date orderDate) {
         this.id = id;
         this.status = status;
-        this.clientId = clientId;
+        this.userId = userId;
         this.orderDate = orderDate;
     }
 
@@ -35,12 +35,12 @@ public class Order {
         this.status = status;
     }
 
-    public int getClientId() {
-        return clientId;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setClientId(int clientId) {
-        this.clientId = clientId;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public Date getOrderDate() {
@@ -56,7 +56,7 @@ public class Order {
         return "Order{" +
                 "id=" + id +
                 ", status='" + status + '\'' +
-                ", clientId=" + clientId +
+                ", userId=" + userId +
                 ", orderDate=" + orderDate +
                 '}';
     }
