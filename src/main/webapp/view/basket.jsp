@@ -21,6 +21,7 @@
         <td>Количество</td>
         <td>Стоимость</td>
     </tr>
+    <c:set var="orderSum" value="0"/>
     <c:forEach items="${orderGoods}" var="good" varStatus="status">
         <tr>
             <td><a href="${pageContext.servletContext.contextPath}/good/show?good_id=${good.orderGood.id}">${good.orderGood.name}</a></td>
@@ -29,12 +30,14 @@
             <td>${good.orderGood.price}</td>
             <td>${good.orderItem.quantity}</td>
             <td>${good.orderGood.price * good.orderItem.quantity}</td>
+            <c:set var="orderSum" value="${orderSum + good.orderGood.price * good.orderItem.quantity}"/>
         </tr>
     </c:forEach>
 </table>
 
 <h3>Статус заказа: ${order.status}</h3>
 <h3>Дата заказа: ${order.orderDate}</h3>
+<h3>К оплате: ${orderSum}</h3>
 
 </body>
 </html>
