@@ -134,24 +134,20 @@ public class JdbcStorage {
                 statement.execute(String.format("INSERT INTO order_items(order_id, good_id, quantity) VALUES(%d, %d, %d)",
                         orderId, newGood.getId(), quantity));
 
-                //Получаю Id только что добавленного к заказу товара.
-                ResultSet ordersLastItem = statement.executeQuery(String.format("SELECT MAX(id) as last_order_item_id FROM order_items WHERE order_id=%d", orderId));
-                if (ordersLastItem.next()) {
-                    int orderItemId = ordersLastItem.getInt("last_order_item_id");
-
-                    //Получаю объект только что добавленного в базу товара заказа.
-                    ResultSet orderItemsSet = statement.executeQuery(String.format("SELECT * FROM order_items WHERE id=%d", orderItemId));
-                    if (orderItemsSet.next()) {
-                        return new OrderItem(
-                                orderItemsSet.getInt("id"),
-                                orderItemsSet.getInt("order_id"),
-                                orderItemsSet.getInt("good_id"),
-                                orderItemsSet.getInt("quantity")
-                        );
-                    }
+                //Получаю объект только что добавленного в базу товара заказа.
+                ResultSet orderItemsSet = statement.executeQuery(
+                        String.format("SELECT * FROM order_items WHERE id=(SELECT MAX(id) FROM order_items WHERE order_id=%d)", orderId));
+                if (orderItemsSet.next()) {
+                    return new OrderItem(
+                            orderItemsSet.getInt("id"),
+                            orderItemsSet.getInt("order_id"),
+                            orderItemsSet.getInt("good_id"),
+                            orderItemsSet.getInt("quantity")
+                    );
                 }
+
             }
-        }catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
