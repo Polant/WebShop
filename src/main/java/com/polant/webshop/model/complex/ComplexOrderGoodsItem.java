@@ -6,12 +6,12 @@ import com.polant.webshop.model.OrderItem;
 /**
  * Составная сущность, которая сопоставляет товар с элементом выбранного заказа по Id заказа.
  */
-public class OrderGood {
+public class ComplexOrderGoodsItem {
 
     private Good orderGood;
     private OrderItem orderItem;
 
-    public OrderGood(Good orderGood, OrderItem orderItem) {
+    public ComplexOrderGoodsItem(Good orderGood, OrderItem orderItem) {
         this.orderGood = orderGood;
         this.orderItem = orderItem;
     }

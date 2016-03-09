@@ -10,6 +10,8 @@
 
 <h2>Моя корзина</h2>
 
+<h3>Заказ № ${order.id}</h3>
+
 <table border="1">
     <tr>
         <td>Название товара</td>
@@ -30,5 +32,9 @@
         </tr>
     </c:forEach>
 </table>
+
+<h3>Статус заказа: ${order.status}</h3>
+<h3>Дата заказа: ${order.orderDate}</h3>
+
 </body>
 </html>

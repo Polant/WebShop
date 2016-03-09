@@ -1,8 +1,9 @@
 package com.polant.webshop.data;
 
 import com.polant.webshop.model.Good;
+import com.polant.webshop.model.Order;
 import com.polant.webshop.model.OrderItem;
-import com.polant.webshop.model.complex.OrderGood;
+import com.polant.webshop.model.complex.ComplexOrderGoodsItem;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -117,10 +118,31 @@ public class JdbcStorage {
         return goods;
     }
 
+    public Order findOrderById(int id){
+        try(Connection connection = this.getConnection();
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM orders WHERE id=?")) {
+
+            statement.setInt(1, id);
+
+            ResultSet result = statement.executeQuery();
+            if (result.next()){
+                return new Order(
+                        result.getInt("id"),
+                        result.getString("status"),
+                        result.getInt("user_id"),
+                        result.getDate("order_date")
+                );
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * @return OrderItem, which attached to new order.
      */
-    public OrderItem createNewOrder(Good newGood, int userId, int quantity) {
+    public ComplexOrderGoodsItem createNewOrder(Good newGood, int userId, int quantity) {
         try (Connection connection = this.getConnection(); Statement statement = connection.createStatement()) {
 
             //Создаю сам заказ.
@@ -138,15 +160,15 @@ public class JdbcStorage {
                 //Получаю объект только что добавленного в базу товара заказа.
                 ResultSet orderItemsSet = statement.executeQuery(
                         String.format("SELECT * FROM order_items WHERE id=(SELECT MAX(id) FROM order_items WHERE order_id=%d)", orderId));
-                if (orderItemsSet.next()) {
-                    return new OrderItem(
-                            orderItemsSet.getInt("id"),
-                            orderItemsSet.getInt("order_id"),
-                            orderItemsSet.getInt("good_id"),
-                            orderItemsSet.getInt("quantity")
-                    );
-                }
 
+                if (orderItemsSet.next()) {
+                    OrderItem orderItem = new OrderItem(orderItemsSet.getInt("id"), orderItemsSet.getInt("order_id"),
+                            orderItemsSet.getInt("good_id"), orderItemsSet.getInt("quantity")
+                    );
+
+                    //Создаю комплексную сущность специально для работы с basket.jsp.
+                    return new ComplexOrderGoodsItem(newGood, orderItem);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -154,7 +176,7 @@ public class JdbcStorage {
         return null;
     }
 
-    public List<OrderGood> addGoodToOrder(int currentOrderId, Good newGood, Integer quantity) {
+    public List<ComplexOrderGoodsItem> addGoodToOrder(int currentOrderId, Good newGood, Integer quantity) {
         try(Connection connection = this.getConnection(); Statement statement = connection.createStatement()) {
 
             //Добавляю товар в существующий заказ.
@@ -163,7 +185,7 @@ public class JdbcStorage {
 
             //Получаю все товары по данному заказу.
             ResultSet orderItemsSet = statement.executeQuery(String.format("SELECT * FROM order_items WHERE order_id=%d", currentOrderId));
-            List<OrderGood> resultList = new ArrayList<>();
+            List<ComplexOrderGoodsItem> resultList = new ArrayList<>();
 
             while (orderItemsSet.next()){
                 Good good = findGoodById(orderItemsSet.getInt("good_id"));
@@ -172,7 +194,8 @@ public class JdbcStorage {
                         orderItemsSet.getInt("good_id"),
                         orderItemsSet.getInt("quantity"));
 
-                resultList.add(new OrderGood(good, orderItem));
+                //добавляю комплексную сущность специально для работы с basket.jsp.
+                resultList.add(new ComplexOrderGoodsItem(good, orderItem));
             }
             return resultList;
 
@@ -181,4 +204,5 @@ public class JdbcStorage {
         }
         return null;
     }
+
 }
