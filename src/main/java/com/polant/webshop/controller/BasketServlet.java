@@ -22,48 +22,55 @@ public class BasketServlet extends HttpServlet {
 
     private final JdbcStorage storage = JdbcStorage.getInstance();
 
+    private static final String ORDER_ATTRIBUTE_JSP = "order";
+    private static final String ORDER_GOODS_ATTRIBUTE_JSP = "orderGoods";
+    private static final String JSP_PAGE = "/view/basket.jsp";
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        //Если идет оплата платежа.
-        if (Boolean.valueOf(req.getParameter("pay_for_order"))){
-            int orderId = Integer.valueOf(req.getParameter("order_id"));
-            storage.payForOrder(orderId);
-            //TODO:обновить страницу.
-        }
-        else {//Если идет добавка товара в корзину.
-            Good newGood = storage.findGoodById(Integer.valueOf(req.getParameter("good_id")));
-            addToBasket(req, newGood);
-            req.getRequestDispatcher("/view/basket.jsp").forward(req, resp);
-        }
-    }
-
-    private void addToBasket(HttpServletRequest req, Good newGood){
         HttpSession session = req.getSession(false);
         if (session != null && !session.isNew()) {
 
-            List<ComplexOrderGoodsItem> goodsList;
+            //Если идет оплата платежа.
+            if (Boolean.valueOf(req.getParameter("pay_for_order"))) {
+                int orderId = Integer.valueOf(req.getParameter("order_id"));
+                storage.payForOrder(orderId);
 
-            int userId = (int) session.getAttribute("user_id");
-            int quantity = Integer.valueOf(req.getParameter("quantity"));
-            
-            //Если создаю новый заказ.
-            if (session.getAttribute("current_order_id") == null) {
-                ComplexOrderGoodsItem item = storage.createNewOrder(newGood, userId, quantity);
+                req.setAttribute(ORDER_ATTRIBUTE_JSP, storage.findOrderById(orderId));
+                req.setAttribute(ORDER_GOODS_ATTRIBUTE_JSP, storage.getAllOrderInfo(orderId));
 
-                session.setAttribute("current_order_id", item.getOrderItem().getOrderId());
-
-                goodsList = new ArrayList<>();
-                goodsList.add(item);
+                req.getRequestDispatcher(JSP_PAGE).forward(req, resp);
             }
-            else {
-                //Если добавляю новый товар к существующему заказу.
-                goodsList = storage.addGoodToOrder((int) session.getAttribute("current_order_id"), newGood, quantity);
+            else {//Если идет добавка товара в корзину.
+                Good newGood = storage.findGoodById(Integer.valueOf(req.getParameter("good_id")));
+                addToBasket(req, session, newGood);
+                req.getRequestDispatcher(JSP_PAGE).forward(req, resp);
             }
-            req.setAttribute("order", storage.findOrderById(goodsList.get(0).getOrderItem().getOrderId()));
-            req.setAttribute("orderGoods", goodsList);
-
-            //TODO: сделать обработку случая, когда на складе недостаточно товаров.
         }
+    }
+
+    private void addToBasket(HttpServletRequest req, HttpSession session, Good newGood) {
+        List<ComplexOrderGoodsItem> goodsList;
+
+        int userId = (int) session.getAttribute("user_id");
+        int quantity = Integer.valueOf(req.getParameter("quantity"));
+
+        //Если создаю новый заказ.
+        if (session.getAttribute("current_order_id") == null) {
+            ComplexOrderGoodsItem item = storage.createNewOrder(newGood, userId, quantity);
+
+            session.setAttribute("current_order_id", item.getOrderItem().getOrderId());
+
+            goodsList = new ArrayList<>();
+            goodsList.add(item);
+        } else {
+            //Если добавляю новый товар к существующему заказу.
+            goodsList = storage.addGoodToOrder((int) session.getAttribute("current_order_id"), newGood, quantity);
+        }
+        req.setAttribute(ORDER_ATTRIBUTE_JSP, storage.findOrderById(goodsList.get(0).getOrderItem().getOrderId()));
+        req.setAttribute(ORDER_GOODS_ATTRIBUTE_JSP, goodsList);
+
+        //TODO: сделать обработку случая, когда на складе недостаточно товаров.
     }
 
 }

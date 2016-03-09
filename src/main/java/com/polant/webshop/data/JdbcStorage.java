@@ -186,7 +186,22 @@ public class JdbcStorage {
                     currentOrderId, newGood.getId(),quantity));
 
             //Получаю все товары по данному заказу.
-            ResultSet orderItemsSet = statement.executeQuery(String.format("SELECT * FROM order_items WHERE order_id=%d", currentOrderId));
+            return getAllOrderInfo(currentOrderId);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    /**
+     * @return Возвращаю все товары для выбранного заказа.
+     */
+    public List<ComplexOrderGoodsItem> getAllOrderInfo(int orderId) {
+        try(Connection connection = this.getConnection(); Statement statement = connection.createStatement()) {
+
+            ResultSet orderItemsSet = statement.executeQuery(String.format("SELECT * FROM order_items WHERE order_id=%d", orderId));
             List<ComplexOrderGoodsItem> resultList = new ArrayList<>();
 
             while (orderItemsSet.next()){
