@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Basket</title>
 </head>
 <body>
 
@@ -38,6 +38,12 @@
 <h3>Статус заказа: ${order.status}</h3>
 <h3>Дата заказа: ${order.orderDate}</h3>
 <h3>К оплате: ${orderSum}</h3>
+
+<form action="${pageContext.servletContext.contextPath}/user/basket" method="post">
+    <input type="hidden" name="order_id" value="${order.id}">
+    <input type="hidden" name="pay_for_order" value="true">
+    <input type="submit" value="Оплатить заказ"/>
+</form>
 
 </body>
 </html>

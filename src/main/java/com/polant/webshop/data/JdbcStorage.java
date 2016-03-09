@@ -24,6 +24,8 @@ public class JdbcStorage {
     public static final String TABLE_PROVIDERS = "providers";
     public static final String TABLE_USERS = "users";
 
+    public static final String ORDER_REGISTERED = "зарегистрирован";
+
     private JdbcStorage(){
         try {
             Class.forName(prop.getProperty("jdbc.driver_class"));
@@ -205,4 +207,22 @@ public class JdbcStorage {
         return null;
     }
 
+
+    /**
+     * Оплата платежа пользователем. Просто меняю статус платежа == ORDER_REGISTERED (см. константу).
+     * Поставить статус 'оплачено' может только администратор.
+     */
+    public int payForOrder(int orderId) {
+        try(Connection connection = this.getConnection();
+            PreparedStatement statement = connection.prepareStatement("UPDATE orders SET status=? WHERE id=?")) {
+
+            statement.setString(1, ORDER_REGISTERED);
+            statement.setInt(2, orderId);
+
+            return statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

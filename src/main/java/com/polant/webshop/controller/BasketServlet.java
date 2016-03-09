@@ -24,9 +24,17 @@ public class BasketServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Good newGood = storage.findGoodById(Integer.valueOf(req.getParameter("good_id")));
-        addToBasket(req, newGood);
-        req.getRequestDispatcher("/view/basket.jsp").forward(req, resp);
+        //Если идет оплата платежа.
+        if (Boolean.valueOf(req.getParameter("pay_for_order"))){
+            int orderId = Integer.valueOf(req.getParameter("order_id"));
+            storage.payForOrder(orderId);
+            //TODO:обновить страницу.
+        }
+        else {//Если идет добавка товара в корзину.
+            Good newGood = storage.findGoodById(Integer.valueOf(req.getParameter("good_id")));
+            addToBasket(req, newGood);
+            req.getRequestDispatcher("/view/basket.jsp").forward(req, resp);
+        }
     }
 
     private void addToBasket(HttpServletRequest req, Good newGood){
