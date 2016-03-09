@@ -1,7 +1,6 @@
 package com.polant.webshop.data;
 
 import com.polant.webshop.model.Good;
-import com.polant.webshop.model.Order;
 import com.polant.webshop.model.OrderItem;
 import com.polant.webshop.model.complex.OrderGood;
 
@@ -36,12 +35,17 @@ public class JdbcStorage {
         return INSTANCE;
     }
 
+    private Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(prop.getProperty("jdbc.url"),
+                    prop.getProperty("jdbc.username"),
+                    prop.getProperty("jdbc.password"));
+    }
+
     /**
      * @return id of matched user
      */
     public int checkLogin(String login, String password){
-        try(Connection connection = DriverManager.getConnection(prop.getProperty("jdbc.url"), prop.getProperty("jdbc.username"),
-                prop.getProperty("jdbc.password"));
+        try(Connection connection = this.getConnection();
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE login=? AND password=?")) {
 
             statement.setString(1, login);
@@ -58,8 +62,7 @@ public class JdbcStorage {
     }
 
     public Good findGoodById(int id){
-        try(Connection connection = DriverManager.getConnection(prop.getProperty("jdbc.url"), prop.getProperty("jdbc.username"),
-                prop.getProperty("jdbc.password"));
+        try(Connection connection = this.getConnection();
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM goods WHERE id=?")) {
 
             statement.setInt(1, id);
@@ -89,8 +92,7 @@ public class JdbcStorage {
     public List<Good> getGoods(){
         List<Good> goods = new ArrayList<>();
 
-        try(Connection connection = DriverManager.getConnection(prop.getProperty("jdbc.url"), prop.getProperty("jdbc.username"),
-                prop.getProperty("jdbc.password")); Statement statement = connection.createStatement()) {
+        try(Connection connection = this.getConnection(); Statement statement = connection.createStatement()) {
 
             ResultSet result = statement.executeQuery("SELECT * FROM goods;");
             while (result.next()){
@@ -119,8 +121,7 @@ public class JdbcStorage {
      * @return OrderItem, which attached to new order.
      */
     public OrderItem createNewOrder(Good newGood, int userId, int quantity) {
-        try (Connection connection = DriverManager.getConnection(prop.getProperty("jdbc.url"), prop.getProperty("jdbc.username"), prop.getProperty("jdbc.password"));
-             Statement statement = connection.createStatement()) {
+        try (Connection connection = this.getConnection(); Statement statement = connection.createStatement()) {
 
             //Создаю сам заказ.
             statement.execute(String.format("INSERT INTO orders(user_id, order_date) VALUES(%d, CURDATE())", userId));
@@ -154,8 +155,7 @@ public class JdbcStorage {
     }
 
     public List<OrderGood> addGoodToOrder(int currentOrderId, Good newGood, Integer quantity) {
-        try(Connection connection = DriverManager.getConnection(prop.getProperty("jdbc.url"), prop.getProperty("jdbc.username"), prop.getProperty("jdbc.password"));
-            Statement statement = connection.createStatement()) {
+        try(Connection connection = this.getConnection(); Statement statement = connection.createStatement()) {
 
             //Добавляю товар в существующий заказ.
             statement.execute(String.format("INSERT INTO order_items(order_id, good_id, quantity) VALUES(%d, %d, %d)",
