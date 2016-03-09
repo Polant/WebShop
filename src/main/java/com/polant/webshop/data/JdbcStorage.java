@@ -4,6 +4,7 @@ import com.polant.webshop.model.Good;
 import com.polant.webshop.model.Order;
 import com.polant.webshop.model.OrderItem;
 import com.polant.webshop.model.complex.ComplexOrderGoodsItem;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ public class JdbcStorage {
     private static final JdbcStorage INSTANCE = new JdbcStorage();
 
     private JdbcProperties prop = JdbcProperties.getInstance();
+
+    private static final Logger LOGGER = Logger.getLogger(JdbcStorage.class);
 
     public static final String TABLE_GOODS = "goods";
     public static final String TABLE_ORDER_ITEMS = "order_items";
@@ -57,11 +60,13 @@ public class JdbcStorage {
 
             ResultSet result = statement.executeQuery();
             if (result.next()){
+                LOGGER.debug(String.format("Authorization %s%s SUCCESS", login, password));
                 return result.getInt("id");
             }
         }catch (SQLException e) {
             e.printStackTrace();
         }
+        LOGGER.debug(String.format("Authorization %s%s FAILED", login, password));
         return -1;
     }
 
@@ -156,6 +161,8 @@ public class JdbcStorage {
             if (ordersSet.next()) {
                 int orderId = ordersSet.getInt("last_order_id");
 
+                LOGGER.debug(String.format("User %d create an order №%d with :%s", userId, orderId, newGood));
+
                 //Добавляю товар в заказ.
                 statement.execute(String.format("INSERT INTO order_items(order_id, good_id, quantity) VALUES(%d, %d, %d)",
                         orderId, newGood.getId(), quantity));
@@ -185,6 +192,8 @@ public class JdbcStorage {
             //Добавляю товар в существующий заказ.
             statement.execute(String.format("INSERT INTO order_items(order_id, good_id, quantity) VALUES(%d, %d, %d)",
                     currentOrderId, newGood.getId(),quantity));
+
+            LOGGER.debug(String.format("Add to order №%d (quantity=%d): %s", currentOrderId, quantity, newGood));
 
             //Получаю все товары по данному заказу.
             return getAllOrderInfo(currentOrderId);
@@ -236,6 +245,8 @@ public class JdbcStorage {
 
             statement.setString(1, isPay ? ORDER_REGISTERED : ORDER_CANCELLED);
             statement.setInt(2, orderId);
+
+            LOGGER.debug(String.format("Order №%d payment %s", orderId, isPay ? ORDER_REGISTERED : ORDER_CANCELLED));
 
             return statement.executeUpdate();
         } catch (SQLException e) {
