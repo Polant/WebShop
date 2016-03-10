@@ -26,8 +26,6 @@ public class BasketServlet extends HttpServlet {
     private static final String ORDER_GOODS_ATTRIBUTE_JSP = "orderGoods";   //Товары заказа.
     private static final String IS_PAYED = "IS_PAYED";                      //Идет запрос на оплату заказа.
 
-    private static final String SESSION_CURRENT_ORDER_ID_ATTRIBUTE = "current_order_id";    //Id текущего заказа.
-
     private static final String JSP_PAGE = "/view/basket.jsp";
 
 
@@ -39,12 +37,11 @@ public class BasketServlet extends HttpServlet {
         HttpSession session = req.getSession(false);
         if (session != null && !session.isNew()) {
 
+            int lastOrderId = this.storage.checkNotPayedOrder((int)session.getAttribute("user_id"));
             //Если в корзине есть товары.
-            if (session.getAttribute(SESSION_CURRENT_ORDER_ID_ATTRIBUTE) != null){
-                int orderId = (int)session.getAttribute(SESSION_CURRENT_ORDER_ID_ATTRIBUTE);
-
-                req.setAttribute(ORDER_ATTRIBUTE_JSP, storage.findOrderById(orderId));
-                req.setAttribute(ORDER_GOODS_ATTRIBUTE_JSP, storage.getAllOrderInfo(orderId));
+            if (lastOrderId > 0){
+                req.setAttribute(ORDER_ATTRIBUTE_JSP, storage.findOrderById(lastOrderId));
+                req.setAttribute(ORDER_GOODS_ATTRIBUTE_JSP, storage.getAllOrderInfo(lastOrderId));
                 req.setAttribute(IS_PAYED, false);
 
                 req.getRequestDispatcher(JSP_PAGE).forward(req, resp);
@@ -71,10 +68,6 @@ public class BasketServlet extends HttpServlet {
                 req.setAttribute(ORDER_ATTRIBUTE_JSP, storage.findOrderById(orderId));
                 req.setAttribute(ORDER_GOODS_ATTRIBUTE_JSP, storage.getAllOrderInfo(orderId));
                 req.setAttribute(IS_PAYED, true);
-
-                //Удаляю атрибут сессии SESSION_CURRENT_ORDER_ID_ATTRIBUTE, чтоб в след. раз уже создавался новый заказ,
-                //ведь пользователь уже оплатил текущий заказ.
-                session.setAttribute(SESSION_CURRENT_ORDER_ID_ATTRIBUTE, null);
             }
             else if (Boolean.valueOf(req.getParameter("cancel_pay_for_order"))) {//идет отмена оплаты.
                 int orderId = Integer.valueOf(req.getParameter("order_id"));
@@ -83,9 +76,6 @@ public class BasketServlet extends HttpServlet {
                 req.setAttribute(ORDER_ATTRIBUTE_JSP, storage.findOrderById(orderId));
                 req.setAttribute(ORDER_GOODS_ATTRIBUTE_JSP, storage.getAllOrderInfo(orderId));
                 req.setAttribute(IS_PAYED, false);
-
-                //Устанавливаю атрибут SESSION_CURRENT_ORDER_ID_ATTRIBUTE, чтобы пользователь дальше мог добавлять товары в этот заказ.
-                session.setAttribute(SESSION_CURRENT_ORDER_ID_ATTRIBUTE, orderId);
             }
             else {//Если идет добавка товара в корзину.
                 Good newGood = storage.findGoodById(Integer.valueOf(req.getParameter("good_id")));
@@ -103,17 +93,17 @@ public class BasketServlet extends HttpServlet {
         int userId = (int) session.getAttribute("user_id");
         int quantity = Integer.valueOf(req.getParameter("quantity"));
 
-        //Если создаю новый заказ.
-        if (session.getAttribute(SESSION_CURRENT_ORDER_ID_ATTRIBUTE) == null) {
-            ComplexOrderGoodsItem item = storage.createNewOrder(newGood, quantity, userId);
+        int lastOrderId = this.storage.checkNotPayedOrder(userId);
 
-            session.setAttribute(SESSION_CURRENT_ORDER_ID_ATTRIBUTE, item.getOrderItem().getOrderId());
+        //Если создаю новый заказ (в том случае, когда нет неоплаченных заказов).
+        if (lastOrderId < 0) {
+            ComplexOrderGoodsItem item = storage.createNewOrder(newGood, quantity, userId);
 
             goodsList = new ArrayList<>();
             goodsList.add(item);
         } else {
             //Если добавляю новый товар к существующему заказу.
-            goodsList = storage.addGoodToOrder(newGood, (int) session.getAttribute(SESSION_CURRENT_ORDER_ID_ATTRIBUTE), quantity, userId);
+            goodsList = storage.addGoodToOrder(newGood, lastOrderId, quantity, userId);
         }
         req.setAttribute(ORDER_ATTRIBUTE_JSP, storage.findOrderById(goodsList.get(0).getOrderItem().getOrderId()));
         req.setAttribute(ORDER_GOODS_ATTRIBUTE_JSP, goodsList);

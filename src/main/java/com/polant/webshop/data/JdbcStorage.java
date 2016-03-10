@@ -70,6 +70,27 @@ public class JdbcStorage {
         return -1;
     }
 
+
+    /**
+     * @return id of order, which has not payed yet; otherwise return -1;
+     */
+    public int checkNotPayedOrder(int userId){
+        try(Connection connection = this.getConnection();
+            PreparedStatement statement = connection.prepareStatement("SELECT id FROM orders WHERE user_id=? AND status=?")){
+
+            statement.setInt(1, userId);
+            statement.setString(2, ORDER_CANCELLED);
+
+            ResultSet set = statement.executeQuery();
+            if (set.next()){
+                return set.getInt("id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
     public Good findGoodById(int id){
         try(Connection connection = this.getConnection();
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM goods WHERE id=?")) {
