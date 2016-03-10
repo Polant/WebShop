@@ -6,6 +6,15 @@
 </head>
 <body>
 
+<div id="header_menu" style="float: left;">
+    <table bgcolor="#32cd32" border="2">
+        <tr>
+            <td><a href="${pageContext.servletContext.contextPath}">Главная страница</a></td>
+            <td><a href="${pageContext.servletContext.contextPath}/user/basket">Моя корзина</a></td>
+        </tr>
+    </table>
+</div><br/><br/>
+
 
 <div id="authorization_form" style="float:right;">
 

@@ -13,6 +13,8 @@
 </head>
 <body>
 
+<jsp:include page="header.jsp"/>
+
 <div id="filter_form" style="float:left;">
 
     <form action="${pageContext.servletContext.contextPath}/" method="POST">
@@ -88,8 +90,6 @@
     </form>
 
 </div>
-
-<jsp:include page="header.jsp"/>
 
 <table border="1">
     <tr>
