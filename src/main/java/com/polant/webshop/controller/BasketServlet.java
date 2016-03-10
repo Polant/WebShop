@@ -60,34 +60,37 @@ public class BasketServlet extends HttpServlet {
         HttpSession session = req.getSession(false);
         if (session != null && !session.isNew()) {
 
+            List<ComplexOrderGoodsItem> goodsItems;//Все товары, которые прикреплены к заказу.
+            int orderId;
+
             //Если идет оплата платежа.
             if (Boolean.valueOf(req.getParameter("pay_for_order"))) {
-                int orderId = Integer.valueOf(req.getParameter("order_id"));
+                orderId = Integer.valueOf(req.getParameter("order_id"));
                 storage.payForOrder(orderId, true);
-
-                req.setAttribute(ORDER_ATTRIBUTE_JSP, storage.findOrderById(orderId));
-                req.setAttribute(ORDER_GOODS_ATTRIBUTE_JSP, storage.getAllOrderInfo(orderId));
                 req.setAttribute(IS_PAYED, true);
+                goodsItems = storage.getAllOrderInfo(orderId);
             }
             else if (Boolean.valueOf(req.getParameter("cancel_pay_for_order"))) {//идет отмена оплаты.
-                int orderId = Integer.valueOf(req.getParameter("order_id"));
+                orderId = Integer.valueOf(req.getParameter("order_id"));
                 storage.payForOrder(orderId, false);
-
-                req.setAttribute(ORDER_ATTRIBUTE_JSP, storage.findOrderById(orderId));
-                req.setAttribute(ORDER_GOODS_ATTRIBUTE_JSP, storage.getAllOrderInfo(orderId));
                 req.setAttribute(IS_PAYED, false);
+                goodsItems = storage.getAllOrderInfo(orderId);
             }
             else {//Если идет добавка товара в корзину.
                 Good newGood = storage.findGoodById(Integer.valueOf(req.getParameter("good_id")));
-                addToBasket(req, session, newGood);
+                goodsItems = addToBasket(req, session, newGood);
 
+                orderId = goodsItems.get(0).getOrderItem().getOrderId();
                 req.setAttribute(IS_PAYED, false);
             }
+            req.setAttribute(ORDER_ATTRIBUTE_JSP, storage.findOrderById(orderId));
+            req.setAttribute(ORDER_GOODS_ATTRIBUTE_JSP, goodsItems);
+
             req.getRequestDispatcher(JSP_PAGE).forward(req, resp);
         }
     }
 
-    private void addToBasket(HttpServletRequest req, HttpSession session, Good newGood) {
+    private List<ComplexOrderGoodsItem> addToBasket(HttpServletRequest req, HttpSession session, Good newGood) {
 
         List<ComplexOrderGoodsItem> goodsList;
         int userId = (int) session.getAttribute("user_id");
@@ -98,15 +101,15 @@ public class BasketServlet extends HttpServlet {
         //Если создаю новый заказ (в том случае, когда нет неоплаченных заказов).
         if (lastOrderId < 0) {
             ComplexOrderGoodsItem item = storage.createNewOrder(newGood, quantity, userId);
-
-            goodsList = new ArrayList<>();
+            goodsList = new ArrayList<>(1);
             goodsList.add(item);
         } else {
             //Если добавляю новый товар к существующему заказу.
-            goodsList = storage.addGoodToOrder(newGood, lastOrderId, quantity, userId);
+            storage.addGoodToOrder(newGood, lastOrderId, quantity, userId);
+            goodsList = storage.getAllOrderInfo(lastOrderId);
         }
-        req.setAttribute(ORDER_ATTRIBUTE_JSP, storage.findOrderById(goodsList.get(0).getOrderItem().getOrderId()));
-        req.setAttribute(ORDER_GOODS_ATTRIBUTE_JSP, goodsList);
+
+        return goodsList;
 
         //TODO: сделать обработку случая, когда на складе недостаточно товаров.
     }

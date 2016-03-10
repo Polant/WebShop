@@ -207,7 +207,7 @@ public class JdbcStorage {
         return null;
     }
 
-    public List<ComplexOrderGoodsItem> addGoodToOrder(Good newGood, int currentOrderId, Integer quantity, int userId) {
+    public void addGoodToOrder(Good newGood, int currentOrderId, Integer quantity, int userId) {
         try(Connection connection = this.getConnection(); Statement statement = connection.createStatement()) {
 
             //Добавляю товар в существующий заказ.
@@ -215,14 +215,9 @@ public class JdbcStorage {
                     currentOrderId, newGood.getId(),quantity));
 
             LOGGER.debug(String.format("User %d add to order №%d (quantity=%d): %s", userId, currentOrderId, quantity, newGood));
-
-            //Получаю все товары по данному заказу.
-            return getAllOrderInfo(currentOrderId);
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
     }
 
 
