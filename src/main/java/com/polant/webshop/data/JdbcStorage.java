@@ -188,6 +188,9 @@ public class JdbcStorage {
                 statement.execute(String.format("INSERT INTO order_items(order_id, good_id, quantity) VALUES(%d, %d, %d)",
                         orderId, newGood.getId(), quantity));
 
+                //Уменьшаю количество товара на складе.
+                decreaseGoodCountLeft(newGood, quantity);
+
                 //Получаю объект только что добавленного в базу товара заказа.
                 ResultSet orderItemsSet = statement.executeQuery(
                         String.format("SELECT * FROM order_items WHERE id=(SELECT MAX(id) FROM order_items WHERE order_id=%d)", orderId));
@@ -214,7 +217,26 @@ public class JdbcStorage {
             statement.execute(String.format("INSERT INTO order_items(order_id, good_id, quantity) VALUES(%d, %d, %d)",
                     currentOrderId, newGood.getId(),quantity));
 
+            //Уменьшаю количество товара на складе.
+            decreaseGoodCountLeft(newGood, quantity);
+
             LOGGER.debug(String.format("User %d add to order №%d (quantity=%d): %s", userId, currentOrderId, quantity, newGood));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void decreaseGoodCountLeft(Good good, int countDecrease){
+        try(Connection connection = this.getConnection();
+            PreparedStatement statement = connection.prepareStatement("UPDATE goods SET count_left=count_left-? WHERE id=?")) {
+
+            statement.setInt(1, countDecrease);
+            statement.setInt(2, good.getId());
+            statement.execute();
+
+            good.setCountLeft(good.getCountLeft() - countDecrease);
+
+            LOGGER.debug(String.format("%s count decreased : (-%d)", good, countDecrease));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -294,8 +316,12 @@ public class JdbcStorage {
         try(Connection connection = this.getConnection();
             PreparedStatement statement = connection.prepareStatement("DELETE FROM order_items WHERE id=?")) {
 
-            statement.setInt(1, deleteOrderItemId);
+            //Добавляю количество товара на складе.
+            statement.execute(String.format(
+                    "UPDATE goods SET count_left=count_left+(SELECT quantity FROM order_items WHERE id=%d) WHERE id=(SELECT good_id FROM order_items WHERE id=%d)",
+                    deleteOrderItemId, deleteOrderItemId));
 
+            statement.setInt(1, deleteOrderItemId);
             return statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -307,12 +333,39 @@ public class JdbcStorage {
         try(Connection connection = this.getConnection();
             PreparedStatement statement = connection.prepareStatement("DELETE FROM orders WHERE id=?")) {
 
-            statement.setInt(1, deleteOrderId);
+            //Но сначала добавлю количество товаров на складе, которые удалил пользователь.
+            increaseCountLeftGoodsAfterDeletingOrder(deleteOrderId);
 
+            statement.setInt(1, deleteOrderId);
             return statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public void increaseCountLeftGoodsAfterDeletingOrder(int orderId){
+        try(Connection connection = this.getConnection();
+            PreparedStatement statement = connection.prepareStatement("UPDATE goods SET count_left=count_left+? WHERE id=?")) {
+
+//            statement.execute("DROP TABLE IF EXISTS temp_goods;");
+//            statement.execute("CREATE TABLE temp_goods (id INT PRIMARY KEY, count_left INT NOT NULL);");
+//            statement.execute("INSERT INTO temp_goods(id, count_left) SELECT id, count_left FROM goods;");
+//
+//            statement.execute(String.format("UPDATE goods SET count_left=count_left+(SELECT SUM(order_items.quantity) " +
+//                    "FROM order_items INNER JOIN temp_goods ON order_items.good_id = temp_goods.id " +
+//                    "WHERE goods.id=temp_goods.id AND order_items.order_id=%d)", orderId));
+//
+//            statement.execute("DROP TABLE temp_goods");
+
+            List<ComplexOrderGoodsItem> items = getAllOrderInfo(orderId);
+            for (ComplexOrderGoodsItem i : items){
+                statement.setInt(1, i.getOrderItem().getQuantity());
+                statement.setInt(2, i.getOrderGood().getId());
+                statement.execute();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
