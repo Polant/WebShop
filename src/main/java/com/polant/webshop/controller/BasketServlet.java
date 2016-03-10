@@ -27,6 +27,7 @@ public class BasketServlet extends HttpServlet {
     private static final String IS_PAYED = "IS_PAYED";                      //Идет запрос на оплату заказа.
 
     private static final String JSP_PAGE = "/view/basket.jsp";
+    private static final String EMPTY_BASKET_JSP = "/view/basket_empty.jsp";
 
 
     /**
@@ -47,7 +48,7 @@ public class BasketServlet extends HttpServlet {
                 req.getRequestDispatcher(JSP_PAGE).forward(req, resp);
             }
             else {//корзина пуста.
-                //TODO: сделать jsp для пустой корзины.
+                req.getRequestDispatcher(EMPTY_BASKET_JSP).forward(req, resp);
             }
         }
         else{
