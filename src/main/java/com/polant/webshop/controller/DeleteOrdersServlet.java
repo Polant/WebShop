@@ -26,7 +26,7 @@ public class DeleteOrdersServlet extends HttpServlet {
         int deleteOrderId = Integer.valueOf(req.getParameter("order_id"));
 
         //Если пользователь удаляет последний товар в заказе, то удаляю весь заказ. Или пользователь сам решил удалить весь заказ.
-        if (deleteOrderWithAllItems || storage.getCountItemsInOrder(deleteOrderId) > 1){
+        if (!deleteOrderWithAllItems && storage.getCountItemsInOrder(deleteOrderId) > 1){
             int deleteOrderItemId = Integer.valueOf(req.getParameter("item_id"));
             LOGGER.debug(String.format("DELETE order item №%d : %s", deleteOrderItemId, storage.deleteOrderItem(deleteOrderItemId)));
         }else {

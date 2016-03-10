@@ -55,5 +55,11 @@
     </c:if>
 </form>
 
+<br/><br/>
+
+<a href="${pageContext.servletContext.contextPath}/user/basket/delete_order_item?order_id=${order.id}&delete_all_items=true">
+    Очистить корзину
+</a>
+
 </body>
 </html>
