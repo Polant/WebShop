@@ -41,8 +41,6 @@ public class BasketServlet extends HttpServlet {
                 req.setAttribute(ORDER_ATTRIBUTE_JSP, storage.findOrderById(orderId));
                 req.setAttribute(ORDER_GOODS_ATTRIBUTE_JSP, storage.getAllOrderInfo(orderId));
                 req.setAttribute(IS_PAYED, true);
-
-                req.getRequestDispatcher(JSP_PAGE).forward(req, resp);
             }
             else if (Boolean.valueOf(req.getParameter("cancel_pay_for_order"))) {//идет отмена оплаты.
                 int orderId = Integer.valueOf(req.getParameter("order_id"));
@@ -51,16 +49,14 @@ public class BasketServlet extends HttpServlet {
                 req.setAttribute(ORDER_ATTRIBUTE_JSP, storage.findOrderById(orderId));
                 req.setAttribute(ORDER_GOODS_ATTRIBUTE_JSP, storage.getAllOrderInfo(orderId));
                 req.setAttribute(IS_PAYED, false);
-
-                req.getRequestDispatcher(JSP_PAGE).forward(req, resp);
             }
             else {//Если идет добавка товара в корзину.
                 Good newGood = storage.findGoodById(Integer.valueOf(req.getParameter("good_id")));
                 addToBasket(req, session, newGood);
 
                 req.setAttribute(IS_PAYED, false);
-                req.getRequestDispatcher(JSP_PAGE).forward(req, resp);
             }
+            req.getRequestDispatcher(JSP_PAGE).forward(req, resp);
         }
     }
 
