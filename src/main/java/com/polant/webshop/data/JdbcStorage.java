@@ -150,7 +150,7 @@ public class JdbcStorage {
     /**
      * @return OrderItem, which attached to new order.
      */
-    public ComplexOrderGoodsItem createNewOrder(Good newGood, int userId, int quantity) {
+    public ComplexOrderGoodsItem createNewOrder(Good newGood, int quantity, int userId) {
         try (Connection connection = this.getConnection(); Statement statement = connection.createStatement()) {
 
             //Создаю сам заказ.
@@ -186,14 +186,14 @@ public class JdbcStorage {
         return null;
     }
 
-    public List<ComplexOrderGoodsItem> addGoodToOrder(int currentOrderId, Good newGood, Integer quantity) {
+    public List<ComplexOrderGoodsItem> addGoodToOrder(Good newGood, int currentOrderId, Integer quantity, int userId) {
         try(Connection connection = this.getConnection(); Statement statement = connection.createStatement()) {
 
             //Добавляю товар в существующий заказ.
             statement.execute(String.format("INSERT INTO order_items(order_id, good_id, quantity) VALUES(%d, %d, %d)",
                     currentOrderId, newGood.getId(),quantity));
 
-            LOGGER.debug(String.format("Add to order №%d (quantity=%d): %s", currentOrderId, quantity, newGood));
+            LOGGER.debug(String.format("User %d add to order №%d (quantity=%d): %s", userId, currentOrderId, quantity, newGood));
 
             //Получаю все товары по данному заказу.
             return getAllOrderInfo(currentOrderId);

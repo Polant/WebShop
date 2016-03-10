@@ -24,11 +24,11 @@ public class BasketServlet extends HttpServlet {
 
     private static final String ORDER_ATTRIBUTE_JSP = "order";              //Заказ.
     private static final String ORDER_GOODS_ATTRIBUTE_JSP = "orderGoods";   //Товары заказа.
+    private static final String IS_PAYED = "IS_PAYED";                      //Идет запрос на оплату заказа.
+
+    private static final String SESSION_CURRENT_ORDER_ID_ATTRIBUTE = "current_order_id";    //Id текущего заказа.
+
     private static final String JSP_PAGE = "/view/basket.jsp";
-
-    private static final String SESSION_CURRENT_ORDER_ID_ATTRIBUTE = "current_order_id";
-
-    private static final String IS_PAYED = "IS_PAYED";
 
 
     /**
@@ -105,7 +105,7 @@ public class BasketServlet extends HttpServlet {
 
         //Если создаю новый заказ.
         if (session.getAttribute(SESSION_CURRENT_ORDER_ID_ATTRIBUTE) == null) {
-            ComplexOrderGoodsItem item = storage.createNewOrder(newGood, userId, quantity);
+            ComplexOrderGoodsItem item = storage.createNewOrder(newGood, quantity, userId);
 
             session.setAttribute(SESSION_CURRENT_ORDER_ID_ATTRIBUTE, item.getOrderItem().getOrderId());
 
@@ -113,7 +113,7 @@ public class BasketServlet extends HttpServlet {
             goodsList.add(item);
         } else {
             //Если добавляю новый товар к существующему заказу.
-            goodsList = storage.addGoodToOrder((int) session.getAttribute(SESSION_CURRENT_ORDER_ID_ATTRIBUTE), newGood, quantity);
+            goodsList = storage.addGoodToOrder(newGood, (int) session.getAttribute(SESSION_CURRENT_ORDER_ID_ATTRIBUTE), quantity, userId);
         }
         req.setAttribute(ORDER_ATTRIBUTE_JSP, storage.findOrderById(goodsList.get(0).getOrderItem().getOrderId()));
         req.setAttribute(ORDER_GOODS_ATTRIBUTE_JSP, goodsList);
