@@ -90,6 +90,10 @@ public class BasketServlet extends HttpServlet {
         }
     }
 
+
+    /**
+     * @return все товары (включая только что добавленный) текущего заказа.
+     */
     private List<ComplexOrderGoodsItem> addToBasket(HttpServletRequest req, HttpSession session, Good newGood) {
 
         List<ComplexOrderGoodsItem> goodsList;
@@ -108,9 +112,7 @@ public class BasketServlet extends HttpServlet {
             storage.addGoodToOrder(newGood, lastOrderId, quantity, userId);
             goodsList = storage.getAllOrderInfo(lastOrderId);
         }
-
         return goodsList;
-
         //TODO: сделать обработку случая, когда на складе недостаточно товаров.
     }
 
