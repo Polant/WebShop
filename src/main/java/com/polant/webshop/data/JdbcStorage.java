@@ -270,4 +270,49 @@ public class JdbcStorage {
         }
         return 0;
     }
+
+    /**
+     * @return count of order items of selected order (by order id).
+     */
+    public int getCountItemsInOrder(int orderId) {
+        try(Connection connection = this.getConnection();
+            PreparedStatement statement = connection.prepareStatement("SELECT COUNT(id) as count_items FROM order_items WHERE order_id=?")) {
+
+            statement.setInt(1, orderId);
+
+            ResultSet set = statement.executeQuery();
+            if (set.next()){
+                return set.getInt("count_items");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public boolean deleteOrderItem(int deleteOrderItemId) {
+        try(Connection connection = this.getConnection();
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM order_items WHERE id=?")) {
+
+            statement.setInt(1, deleteOrderItemId);
+
+            return statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean deleteOrder(int deleteOrderId) {
+        try(Connection connection = this.getConnection();
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM orders WHERE id=?")) {
+
+            statement.setInt(1, deleteOrderId);
+
+            return statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
