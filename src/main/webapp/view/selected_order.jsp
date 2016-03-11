@@ -32,8 +32,7 @@
             <td>${good.orderItem.quantity}</td>
             <td>${good.orderGood.price * good.orderItem.quantity}$</td>
             <c:set var="orderSum" value="${orderSum + good.orderGood.price * good.orderItem.quantity}"/>
-            <td><a href="${pageContext.servletContext.contextPath}/user/basket/delete_order_item?order_id=${order.id}&item_id=${good.orderItem.id}&delete_all_items=false">Удалить из заказа</a> </td>
-        </tr>
+            </tr>
     </c:forEach>
 </table>
 
@@ -41,24 +40,16 @@
 <h3>Дата заказа: ${order.orderDate}</h3>
 <h3>К оплате: ${orderSum}$</h3>
 
-<form action="${pageContext.servletContext.contextPath}/user/basket" method="post">
-    <input type="hidden" name="order_id" value="${order.id}">
-    <c:if test="${!IS_PAYED}">
-        <%--Оплата, если еще не оплачено--%>
-        <input type="hidden" name="pay_for_order" value="true">
-        <input type="submit" value="Оплатить заказ"/>
-    </c:if>
-    <c:if test="${IS_PAYED}">
-        <%--Отмена оплаты, если уже оплачено--%>
-        <input type="hidden" name="cancel_pay_for_order" value="true">
-        <input type="submit" value="Отменить оплату"/>
-    </c:if>
-</form>
+<%--Если заказ еще НЕ оплачен, то можно изменить его в корзине--%>
+<c:if test="${!IS_PAYED}">
+    <a href="${pageContext.servletContext.contextPath}/user/basket">Просмотреть заказ в корзине</a>
+</c:if>
 
 <br/><br/>
 
+<%--Но если заказ оплачен, то пользователь может только лишь его отменить--%>
 <a href="${pageContext.servletContext.contextPath}/user/basket/delete_order_item?order_id=${order.id}&delete_all_items=true">
-    Очистить корзину
+    Отменить заказ
 </a>
 
 </body>

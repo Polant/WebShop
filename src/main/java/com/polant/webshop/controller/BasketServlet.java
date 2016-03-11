@@ -114,7 +114,6 @@ public class BasketServlet extends HttpServlet {
             goodsList = storage.getAllOrderInfo(lastOrderId);
         }
         return goodsList;
-        //TODO: сделать обработку случая, когда на складе недостаточно товаров.
     }
 
 }
