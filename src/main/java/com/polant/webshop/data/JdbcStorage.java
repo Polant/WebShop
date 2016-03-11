@@ -368,4 +368,27 @@ public class JdbcStorage {
             e.printStackTrace();
         }
     }
+
+    public List<Order> getUserOrders(int userId) {
+        List<Order> result = new ArrayList<>();
+
+        try(Connection connection = this.getConnection();
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM orders WHERE user_id=?")) {
+
+            statement.setInt(1, userId);
+            ResultSet set = statement.executeQuery();
+            while (set.next()){
+                Order order = new Order(set.getInt("id"),
+                        set.getString("status"),
+                        set.getInt("user_id"),
+                        set.getDate("order_date"));
+
+                result.add(order);
+            }
+            return result;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }
