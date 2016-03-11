@@ -20,7 +20,6 @@
         <td>Цена за 1 шт.</td>
         <td>Количество</td>
         <td>Стоимость</td>
-        <td>Действие</td>
     </tr>
     <c:set var="orderSum" value="0"/>
     <c:forEach items="${orderGoods}" var="good" varStatus="status">
@@ -48,7 +47,7 @@
 <br/><br/>
 
 <%--Но если заказ оплачен, то пользователь может только лишь его отменить--%>
-<a href="${pageContext.servletContext.contextPath}/user/basket/delete_order_item?order_id=${order.id}&delete_all_items=true">
+<a href="${pageContext.servletContext.contextPath}/user/basket/delete_order_item?order_id=${order.id}&delete_all_items=true&redirect_to_user_orders=true">
     Отменить заказ
 </a>
 

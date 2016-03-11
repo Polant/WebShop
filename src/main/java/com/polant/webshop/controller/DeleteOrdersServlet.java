@@ -32,6 +32,10 @@ public class DeleteOrdersServlet extends HttpServlet {
         }else {
             LOGGER.debug(String.format("DELETE order №%d : %s", deleteOrderId, storage.deleteOrder(deleteOrderId)));
         }
-        resp.sendRedirect(String.format("%s%s", req.getContextPath(), "/user/basket"));
+
+        //true - если запрос послан из списка заказов пользователя, false - из корзины пользователя.
+        boolean callFromUserOrders = Boolean.valueOf(req.getParameter("redirect_to_user_orders"));
+
+        resp.sendRedirect(String.format("%s%s", req.getContextPath(), callFromUserOrders ? "/user/orders" : "/user/basket"));
     }
 }
