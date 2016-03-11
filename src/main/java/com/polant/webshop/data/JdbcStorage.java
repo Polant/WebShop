@@ -396,42 +396,44 @@ public class JdbcStorage {
                                   String orderByName, String orderByPrice, String orderByDate) {
         List<Good> result = new ArrayList<>();
 
-        String stock;
-        if (inStock.equals("in_stock")){
-            stock = "count_left>0";
-        }else if (inStock.equals("not_in_stock")){
-            stock = "count_left=0";
-        }else {//В наличии и не в наличии.
-            stock = "count_left>=0";
-        }
-
         try(Connection connection = this.getConnection(); Statement statement = connection.createStatement()){
 
-            String sql = "SELECT * FROM goods WHERE LOWER(name) LIKE '%" + name.toLowerCase() + "%' ";
-            if (categories != null) {
-                sql += "AND category IN (";
-                for (int i = 0; i < categories.length; i++) {
-                    sql += String.format("'%s'", categories[i]);
-                    if (i < categories.length - 1) {
-                        sql += ", ";
-                    }
-                }
-                sql += ")";
+            String stock;
+            if (inStock.equals("in_stock")){
+                stock = "count_left>0";
+            }else if (inStock.equals("not_in_stock")){
+                stock = "count_left=0";
+            }else {//В наличии и не в наличии.
+                stock = "count_left>=0";
             }
-            sql += " AND (price BETWEEN " + priceFrom + " AND " + priceTo + ") AND " + stock;
-            if (colors != null) {
-                sql += " AND color IN(";
-                for (int i = 0; i < colors.length; i++) {
-                    sql += String.format("'%s'", colors[i]);
-                    if (i < colors.length - 1) {
-                        sql += ", ";
-                    }
-                }
-                sql += ")";
-            }
-            sql += " ORDER BY name " + orderByName + ", price "+ orderByPrice + ", manufacturing_date " + orderByDate;
 
-            ResultSet set = statement.executeQuery(sql);
+            StringBuilder sql = new StringBuilder("SELECT * FROM goods WHERE LOWER(name) LIKE '%").append(name.toLowerCase()).append("%' ");
+            if (categories != null) {
+                //Если выбраны категории для фильтра.
+                sql.append("AND category IN (");
+                for (int i = 0; i < categories.length; i++) {
+                    sql.append(String.format("'%s'", categories[i]));
+                    if (i < categories.length - 1) {
+                        sql.append(", ");
+                    }
+                }
+                sql.append(")");
+            }
+            sql.append(" AND (price BETWEEN ").append(priceFrom).append(" AND ").append(priceTo).append(") AND ").append(stock);
+            if (colors != null) {
+                //Если выбраны цвета для фильтра.
+                sql.append(" AND color IN(");
+                for (int i = 0; i < colors.length; i++) {
+                    sql.append(String.format("'%s'", colors[i]));
+                    if (i < colors.length - 1) {
+                        sql.append(", ");
+                    }
+                }
+                sql.append(")");
+            }
+            sql.append(" ORDER BY name ").append(orderByName).append(", price ").append(orderByPrice).append(", manufacturing_date ").append(orderByDate);
+
+            ResultSet set = statement.executeQuery(sql.toString());
             while (set.next()){
                 Good good = new Good(
                         set.getInt("id"),
