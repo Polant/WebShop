@@ -25,21 +25,21 @@
 
             Категория: <br />
 
-            <input type="checkbox" id="categorySmartphones" name="category" value="smartphones" />
+            <input type="checkbox" id="categorySmartphones" name="category" value="Смартфон" />
             <label for="categorySmartphones">Смартфоны </label><br />
-            <input type="checkbox" id="categoryTablets" name="category" value="tablets" />
+            <input type="checkbox" id="categoryTablets" name="category" value="Планшет" />
             <label for="categoryTablets">Планшеты </label><br />
-            <input type="checkbox" id="categoryPC" name="category" value="pc" />
+            <input type="checkbox" id="categoryPC" name="category" value="ПК" />
             <label for="categoryPC">ПК </label><br />
-            <input type="checkbox" id="categoryTV" name="category" value="tv" />
+            <input type="checkbox" id="categoryTV" name="category" value="Телевизор" />
             <label for="categoryTV">Телевизоры</label><br /><br />
 
 
             Цена: <br />
             <label for="price_from">От </label>
-            <input type="text" id="price_from" name="price_from" size="8" maxlength="8" value="0" /> <br />
+            <input type="number" id="price_from" name="price_from" size="6" maxlength="6" value="0" /> <br />
             <label for="price_to">До </label>
-            <input type="text" id="price_to" name="price_to" size="8" maxlength="8" value="1000" /> <br /><br />
+            <input type="number" id="price_to" name="price_to" size="6" maxlength="6" value="1000" /> <br /><br />
 
 
             <input type="checkbox" id="is_in_stock_true" name="is_in_stock" value="true" checked="checked" />
@@ -48,15 +48,15 @@
             <label for="is_in_stock_false"> Нет в наличии</label><br /><br />
 
             Цвет: <br />
-            <input type="checkbox" id="colorRed" name="color" value="red" />
+            <input type="checkbox" id="colorRed" name="color" value="Красный" />
             <label for="colorRed">Красный </label><br />
-            <input type="checkbox" id="colorGreen" name="color" value="green" />
+            <input type="checkbox" id="colorGreen" name="color" value="Зеленый" />
             <label for="colorGreen">Зеленый </label><br />
-            <input type="checkbox" id="colorBlue" name="color" value="blue" />
+            <input type="checkbox" id="colorBlue" name="color" value="Синий" />
             <label for="colorBlue">Синий </label><br />
-            <input type="checkbox" id="colorBlack" name="color" value="black" />
+            <input type="checkbox" id="colorBlack" name="color" value="Черный" />
             <label for="colorBlack">Черный </label><br />
-            <input type="checkbox" id="colorWhite" name="color" value="white" />
+            <input type="checkbox" id="colorWhite" name="color" value="Белый" />
             <label for="colorWhite">Белый </label><br /><br />
 
             Сортировка: <br /><br />
