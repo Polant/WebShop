@@ -23,6 +23,9 @@
                 Фильтр
             </legend>
 
+            <label for="nameGoods">Название </label>
+            <input type="text" id="nameGoods" name="name_goods" value="" /><br /><br />
+
             Категория: <br />
 
             <input type="checkbox" id="categorySmartphones" name="category" value="Смартфон" />
@@ -37,15 +40,17 @@
 
             Цена: <br />
             <label for="price_from">От </label>
-            <input type="number" id="price_from" name="price_from" size="6" maxlength="6" value="0" /> <br />
+            <input type="number" id="price_from" name="price_from" size="6" min="0" maxlength="6" value="0" /> <br />
             <label for="price_to">До </label>
-            <input type="number" id="price_to" name="price_to" size="6" maxlength="6" value="1000" /> <br /><br />
+            <input type="number" id="price_to" name="price_to" size="6" min="0" maxlength="6" value="1000" /> <br /><br />
 
 
-            <input type="checkbox" id="is_in_stock_true" name="is_in_stock" value="true" checked="checked" />
-            <label for="is_in_stock_true"> Есть в наличии </label><br />
-            <input type="checkbox" id="is_in_stock_false" name="is_in_stock" value="false" />
-            <label for="is_in_stock_false"> Нет в наличии</label><br /><br />
+            <input type="radio" id="is_in_stock_true" name="is_in_stock" value="in_stock" checked="checked" />
+            <label for="is_in_stock_true">В наличии </label><br />
+            <input type="radio" id="is_in_stock_false" name="is_in_stock" value="not_in_stock" />
+            <label for="is_in_stock_false">Нет в наличии </label><br />
+            <input type="radio" id="is_in_stock_show_all" name="is_in_stock" value="show_all" />
+            <label for="is_in_stock_show_all">Показать все </label><br /><br />
 
             Цвет: <br />
             <input type="checkbox" id="colorRed" name="color" value="Красный" />

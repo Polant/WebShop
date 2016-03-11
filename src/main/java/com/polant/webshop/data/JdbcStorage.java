@@ -391,4 +391,66 @@ public class JdbcStorage {
         }
         return result;
     }
+
+    public List<Good> filterGoods(String name, String[] categories, int priceFrom, int priceTo, String inStock, String[] colors,
+                                  String orderByName, String orderByPrice, String orderByDate) {
+        List<Good> result = new ArrayList<>();
+
+        String stock;
+        if (inStock.equals("in_stock")){
+            stock = "count_left>0";
+        }else if (inStock.equals("not_in_stock")){
+            stock = "count_left=0";
+        }else {//В наличии и не в наличии.
+            stock = "count_left>=0";
+        }
+
+        try(Connection connection = this.getConnection(); Statement statement = connection.createStatement()){
+
+            String sql = "SELECT * FROM goods WHERE LOWER(name) LIKE '%" + name.toLowerCase() + "%' ";
+            if (categories != null) {
+                sql += "AND category IN (";
+                for (int i = 0; i < categories.length; i++) {
+                    sql += String.format("'%s'", categories[i]);
+                    if (i < categories.length - 1) {
+                        sql += ", ";
+                    }
+                }
+                sql += ")";
+            }
+            sql += " AND (price BETWEEN " + priceFrom + " AND " + priceTo + ") AND " + stock;
+            if (colors != null) {
+                sql += " AND color IN(";
+                for (int i = 0; i < colors.length; i++) {
+                    sql += String.format("'%s'", colors[i]);
+                    if (i < colors.length - 1) {
+                        sql += ", ";
+                    }
+                }
+                sql += ")";
+            }
+            sql += " ORDER BY name " + orderByName + ", price "+ orderByPrice + ", manufacturing_date " + orderByDate;
+
+            ResultSet set = statement.executeQuery(sql);
+            while (set.next()){
+                Good good = new Good(
+                        set.getInt("id"),
+                        set.getString("name"),
+                        set.getString("description"),
+                        set.getDouble("price"),
+                        set.getString("category"),
+                        set.getString("color"),
+                        set.getInt("provider_id"),
+                        set.getString("manufacturer_name"),
+                        set.getDate("manufacturing_date"),
+                        set.getDate("delivery_date"),
+                        set.getInt("count_left")
+                );
+                result.add(good);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }
