@@ -8,23 +8,14 @@
 
 <jsp:include page="header.jsp"/>
 
-<h2 style="text-align: center">Мой кабинет</h2>
+<h2>Мой профиль</h2>
 
 <form action="${pageContext.servletContext.contextPath}/user/profile/change" method="post">
 
     <input type="hidden" name="user" value="${user}" />
 
-    <table border="1" bgcolor="#f5deb3">
-        <tr>
-            <td>Логин</td>
-            <td>${user.login}</td>
-        </tr>
-        <tr>
-            <td>Email</td>
-            <td>${user.email}</td>
-        </tr>
-
-    </table><br/><br/>
+    <p>Логин: ${user.login}</p>
+    <p>Email: ${user.email}</p>
 
     <input type="submit" value="Изменить профиль" />
 </form>
