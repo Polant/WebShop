@@ -28,12 +28,14 @@
 
             Категория: <br />
 
-            <input type="checkbox" id="categorySmartphones" name="category" value="Смартфон" />
+            <input type="checkbox" id="categorySmartphones" name="category" value="Смартфон" checked/>
             <label for="categorySmartphones">Смартфоны </label><br />
             <input type="checkbox" id="categoryTablets" name="category" value="Планшет" />
             <label for="categoryTablets">Планшеты </label><br />
             <input type="checkbox" id="categoryPC" name="category" value="ПК" />
             <label for="categoryPC">ПК </label><br />
+            <input type="checkbox" id="categoryNotebooks" name="category" value="Ноутбук" />
+            <label for="categoryNotebooks">Ноутбуки </label><br />
             <input type="checkbox" id="categoryTV" name="category" value="Телевизор" />
             <label for="categoryTV">Телевизоры</label><br /><br />
 
@@ -42,7 +44,7 @@
             <label for="price_from">От </label>
             <input type="number" id="price_from" name="price_from" size="6" min="0" maxlength="6" value="0" /> <br />
             <label for="price_to">До </label>
-            <input type="number" id="price_to" name="price_to" size="6" min="0" maxlength="6" value="1000" /> <br /><br />
+            <input type="number" id="price_to" name="price_to" size="6" min="0" maxlength="6" value="10000" /> <br /><br />
 
 
             <input type="radio" id="is_in_stock_true" name="is_in_stock" value="in_stock" checked="checked" />
@@ -59,9 +61,9 @@
             <label for="colorGreen">Зеленый </label><br />
             <input type="checkbox" id="colorBlue" name="color" value="Синий" />
             <label for="colorBlue">Синий </label><br />
-            <input type="checkbox" id="colorBlack" name="color" value="Черный" />
+            <input type="checkbox" id="colorBlack" name="color" value="Черный" checked/>
             <label for="colorBlack">Черный </label><br />
-            <input type="checkbox" id="colorWhite" name="color" value="Белый" />
+            <input type="checkbox" id="colorWhite" name="color" value="Белый" checked/>
             <label for="colorWhite">Белый </label><br /><br />
 
             Сортировка: <br /><br />
@@ -117,11 +119,16 @@
             <td>${good.manufacturerName}</td>
             <td>${good.countLeft}</td>
             <c:if test="${not empty IS_ADMIN}">
-                <td><a href="${pageContext.servletContext.contextPath}/admin/goods/edit?id=${good.id}">Редактировать</a> </td>
+                <%--При удалении товара, он не удаляется из базы, а лишь обнуляется его поле countLeft -> товара нет на складе--%>
+                <td><a href="${pageContext.servletContext.contextPath}/admin/goods/delete?id=${good.id}">Убрать со склада</a> </td>
             </c:if>
         </tr>
     </c:forEach>
-</table>
+</table><br/><br/><br/>
+
+<c:if test="${not empty IS_ADMIN}">
+    <td><a href="${pageContext.servletContext.contextPath}/admin/goods/add">Добавить товар</a></td>
+</c:if>
 
 </body>
 </html>
