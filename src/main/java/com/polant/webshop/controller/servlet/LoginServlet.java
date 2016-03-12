@@ -1,6 +1,7 @@
 package com.polant.webshop.controller.servlet;
 
 import com.polant.webshop.data.JdbcStorage;
+import com.polant.webshop.model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -35,11 +36,14 @@ public class LoginServlet extends HttpServlet {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
         if (login != null && password != null){
-            int userId;
-            if ((userId = storage.checkLogin(login, password)) > 0){
+            User user;
+            if ((user = storage.checkLogin(login, password)) != null && !user.isBanned()){
                 HttpSession newSession = req.getSession(true);
                 newSession.setAttribute("login", login);
-                newSession.setAttribute("user_id", userId);
+                newSession.setAttribute("user_id", user.getId());
+            }
+            if (user.isAdmin()){
+                //TODO: переход на админку.
             }
         }
         else{

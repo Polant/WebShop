@@ -52,7 +52,7 @@ public class EditUserProfileServlet extends HttpServlet {
         boolean validNewPassword = true;
         boolean validEmail = true;
 
-        if (!(storage.checkLogin(user.getLogin(), passwordOld) > 0)){
+        if (storage.checkLogin(user.getLogin(), passwordOld) != null){
             req.setAttribute("NOT_VALID_OLD_PASSWORD", true);
             validOldPassword = false;
         }

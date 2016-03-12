@@ -51,25 +51,32 @@ public class JdbcStorage {
     }
 
     /**
-     * @return id of matched user
+     * @return matched User object.
      */
-    public int checkLogin(String login, String password){
+    public User checkLogin(String login, String password){
         try(Connection connection = this.getConnection();
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE login=? AND password=?")) {
 
             statement.setString(1, login);
             statement.setString(2, password);
 
-            ResultSet result = statement.executeQuery();
-            if (result.next()){
-                LOGGER.debug(String.format("Authorization %s%s SUCCESS", login, password));
-                return result.getInt("id");
+            ResultSet set = statement.executeQuery();
+            if (set.next()){
+                LOGGER.debug(String.format("Confirm login and password %s%s SUCCESS", login, password));
+                return new User(
+                        set.getInt("id"),
+                        set.getString("login"),
+                        set.getString("password"),
+                        set.getString("email"),
+                        set.getBoolean("isBanned"),
+                        set.getBoolean("isAdmin")
+                );
             }
         }catch (SQLException e) {
             e.printStackTrace();
         }
         LOGGER.debug(String.format("Authorization %s%s FAILED", login, password));
-        return -1;
+        return null;
     }
 
 
