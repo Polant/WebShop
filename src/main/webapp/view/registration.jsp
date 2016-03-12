@@ -1,11 +1,5 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Antony
-  Date: 12.03.2016
-  Time: 11:48
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Registration</title>
@@ -13,6 +7,9 @@
         form {
             width: 400px;
             margin: auto; /* Выравнивание формы по центру окна  */
+        }
+        .error_message{
+            color: firebrick;
         }
     </style>
 </head>
@@ -25,6 +22,13 @@
         </legend>
 
         <p>Обязательные поля обозначены *зведочкой : </p>
+
+        <c:if test="${not empty PASSWORDS_NOT_EQUALS}">
+            <p class="error_message">Пароли должны совпадать!</p>
+        </c:if>
+        <c:if test="${not empty LOGIN_ALREADY_EXISTS}">
+            <p class="error_message">Данный логин уже существует!</p>
+        </c:if>
 
         <div style="margin: 0px auto; text-align: center">
             <label for="login">*Логин : </label><br />
