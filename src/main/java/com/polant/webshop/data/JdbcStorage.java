@@ -6,6 +6,7 @@ import com.polant.webshop.model.OrderItem;
 import com.polant.webshop.model.User;
 import com.polant.webshop.model.complex.ComplexOrderGoodsItem;
 import org.apache.log4j.Logger;
+import org.apache.log4j.lf5.util.StreamUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -467,9 +468,10 @@ public class JdbcStorage {
 
             statement.execute();
 
-            ResultSet set = statement.executeQuery(String.format("SELECT * FROM users WHERE login=%s", login));
+            String sql = String.format("SELECT * FROM users WHERE login='%s'", login);
+            ResultSet set = statement.executeQuery(sql);
             if (set.next()){
-                return new User(
+                User user = new User(
                         set.getInt("id"),
                         set.getString("login"),
                         set.getString("password"),
@@ -477,6 +479,8 @@ public class JdbcStorage {
                         set.getBoolean("isBanned"),
                         set.getBoolean("isAdmin")
                 );
+                LOGGER.debug(String.format("REGISTER USER %s", user));
+                return user;
             }
         } catch (SQLException e) {
             e.printStackTrace();
