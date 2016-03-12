@@ -54,11 +54,10 @@ public class RegistrationServlet extends HttpServlet {
             validPassword = false;
         }
 
-        if (!email.equals("")){
-            if (!Pattern.matches("^([a-z0-9_-]+\\.)*[a-z0-9_-]+@[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z]{2,6}$", email)){
-                req.setAttribute("EMAIL_NOT_VALID", true);
-                validEmail = false;
-            }
+        //Почта не может быть пустой и должна быть корректной.
+        if (!Pattern.matches("^([a-z0-9_-]+\\.)*[a-z0-9_-]+@[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z]{2,6}$", email)) {
+            req.setAttribute("EMAIL_NOT_VALID", true);
+            validEmail = false;
         }
 
         if (validEmail && validPassword && validLogin) {
