@@ -487,4 +487,26 @@ public class JdbcStorage {
         }
         return null;
     }
+
+    public User findUserById(int id){
+        try (Connection connection = this.getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE id=?")) {
+
+            statement.setInt(1, id);
+            ResultSet set = statement.executeQuery();
+            if (set.next()){
+                return new User(
+                        set.getInt("id"),
+                        set.getString("login"),
+                        set.getString("password"),
+                        set.getString("email"),
+                        set.getBoolean("isBanned"),
+                        set.getBoolean("isAdmin")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
