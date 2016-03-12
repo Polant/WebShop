@@ -10,6 +10,7 @@
     <table bgcolor="#32cd32" border="2">
         <tr>
             <td><a href="${pageContext.servletContext.contextPath}">Главная страница</a></td>
+            <td><a href="${pageContext.servletContext.contextPath}/user/profile">Мой кабинет</a></td>
             <td><a href="${pageContext.servletContext.contextPath}/user/orders">Мои заказы</a></td>
             <td><a href="${pageContext.servletContext.contextPath}/user/basket">Моя корзина</a></td>
         </tr>
