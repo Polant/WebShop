@@ -26,6 +26,9 @@ public class LoginServlet extends HttpServlet {
         if (req.getParameter("log_out") != null){
             HttpSession session = req.getSession(false);
             session.invalidate();
+            //После выхода всегда направляю пользователя на главную страницу.
+            resp.sendRedirect(String.format("%s%s", req.getContextPath(), "/"));
+            return;
         }
 
         //Вход в систему.
