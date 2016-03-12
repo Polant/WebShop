@@ -6,14 +6,13 @@ import com.polant.webshop.model.OrderItem;
 import com.polant.webshop.model.User;
 import com.polant.webshop.model.complex.ComplexOrderGoodsItem;
 import org.apache.log4j.Logger;
-import org.apache.log4j.lf5.util.StreamUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Antony on 06.03.2016.
+ * Данный класс является классом-оберткой над базой данных. Содержит все необходимые методы для работы с БД.
  */
 public class JdbcStorage {
 

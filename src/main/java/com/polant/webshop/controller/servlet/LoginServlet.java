@@ -43,7 +43,8 @@ public class LoginServlet extends HttpServlet {
                 newSession.setAttribute("user_id", user.getId());
             }
             if (user.isAdmin()){
-                //TODO: переход на админку.
+                resp.sendRedirect(String.format("%s%s", req.getContextPath(), "/"));
+                return;
             }
         }
         else{
