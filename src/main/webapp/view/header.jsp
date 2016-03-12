@@ -11,8 +11,11 @@
         <tr>
             <td><a href="${pageContext.servletContext.contextPath}">Главная страница</a></td>
             <td><a href="${pageContext.servletContext.contextPath}/user/profile">Мой профиль</a></td>
-            <td><a href="${pageContext.servletContext.contextPath}/user/orders">Мои заказы</a></td>
-            <td><a href="${pageContext.servletContext.contextPath}/user/basket">Моя корзина</a></td>
+
+            <c:if test="${empty IS_ADMIN}">
+                <td><a href="${pageContext.servletContext.contextPath}/user/orders">Мои заказы</a></td>
+                <td><a href="${pageContext.servletContext.contextPath}/user/basket">Моя корзина</a></td>
+            </c:if>
         </tr>
     </table>
 </div><br/><br/>

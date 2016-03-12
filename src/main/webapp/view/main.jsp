@@ -104,6 +104,9 @@
         <td>Цвет</td>
         <td>Производитель</td>
         <td>На складе (шт.)</td>
+        <c:if test="${not empty IS_ADMIN}">
+            <td>Действие</td>
+        </c:if>
     </tr>
     <c:forEach items="${goods}" var="good" varStatus="status">
         <tr>
@@ -113,6 +116,9 @@
             <td>${good.color}</td>
             <td>${good.manufacturerName}</td>
             <td>${good.countLeft}</td>
+            <c:if test="${not empty IS_ADMIN}">
+                <td><a href="${pageContext.servletContext.contextPath}/admin/goods/edit?id=${good.id}">Редактировать</a> </td>
+            </c:if>
         </tr>
     </c:forEach>
 </table>
