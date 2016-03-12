@@ -8,8 +8,8 @@ import com.polant.webshop.model.complex.ComplexOrderGoodsItem;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.Date;
 
 /**
  * Данный класс является классом-оберткой над базой данных. Содержит все необходимые методы для работы с БД.
@@ -533,5 +533,31 @@ public class JdbcStorage {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public void addGood(String name, String description, int price, String category, String color, int providerId,
+                        String manufacturerName, Date manufacturingDate, Date deliveryDate, int countLeft) {
+
+        try (Connection connection = this.getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     "INSERT INTO goods(name, description, price, category, color, provider_id, manufacturer_name, manufacturing_date, delivery_date, count_left) " +
+                             "VALUES(?,?,?,?,?,?,?,?,?,?)")) {
+
+            statement.setString(1, name);
+            statement.setString(2, description);
+            statement.setInt(3, price);
+            statement.setString(4, category);
+            statement.setString(5, color);
+            statement.setInt(6, providerId);
+            statement.setString(7, manufacturerName);
+            statement.setDate(8, (java.sql.Date) manufacturingDate);
+            statement.setDate(9, (java.sql.Date) deliveryDate);
+            statement.setInt(10, countLeft);
+
+            statement.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
