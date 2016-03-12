@@ -3,6 +3,7 @@ package com.polant.webshop.data;
 import com.polant.webshop.model.Good;
 import com.polant.webshop.model.Order;
 import com.polant.webshop.model.OrderItem;
+import com.polant.webshop.model.User;
 import com.polant.webshop.model.complex.ComplexOrderGoodsItem;
 import org.apache.log4j.Logger;
 
@@ -454,5 +455,32 @@ public class JdbcStorage {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public User registerUser(String login, String password, String email) {
+        try (Connection connection = this.getConnection();
+             PreparedStatement statement = connection.prepareStatement("INSERT INTO users(login, password, email) VALUES(?,?,?)")) {
+
+            statement.setString(1, login);
+            statement.setString(2, password);
+            statement.setString(3, email);
+
+            statement.execute();
+
+            ResultSet set = statement.executeQuery(String.format("SELECT * FROM users WHERE login=%s", login));
+            if (set.next()){
+                return new User(
+                        set.getInt("id"),
+                        set.getString("login"),
+                        set.getString("password"),
+                        set.getString("email"),
+                        set.getBoolean("isBanned"),
+                        set.getBoolean("isAdmin")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

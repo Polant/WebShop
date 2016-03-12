@@ -17,11 +17,15 @@
             Регистрация
         </legend>
 
-        <label for="login">Логин: </label><br />
+        <p>Обязательный поля обозначены *зведочкой : </p>
+
+        <label for="login">*Логин : </label><br />
         <input type="text" id="login" name="login" value="" placeholder="login"/><br />
-        <label for="passwordFirst">Введите пароль: </label><br />
+        <label for="login">Email : </label><br />
+        <input type="text" id="email" name="email" value="" placeholder="your.email@mail.com"/><br />
+        <label for="passwordFirst">*Введите пароль : </label><br />
         <input type="password" id="passwordFirst" name="password" value="" placeholder="password"/><br /><br />
-        <label for="passwordSecond">Подтвердите пароль: </label><br />
+        <label for="passwordSecond">*Подтвердите пароль: </label><br />
         <input type="password" id="passwordSecond" name="password" value="" placeholder="password"/><br /><br />
 
         <input type="submit" value="Зарегистрироваться" />
