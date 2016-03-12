@@ -42,6 +42,8 @@
 
                 <input type="submit" value="Войти" />
                 <input type="reset" value="Сбросить" />
+
+                <a href="${pageContext.servletContext.contextPath}/user/registration">Регистрация</a>
             </c:if>
 
         </fieldset>
