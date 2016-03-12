@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Add goods</title>
@@ -63,10 +64,21 @@
                     <input type="text" id="manufacturer_name" name="manufacturer_name" value="${manufacturer_name}" placeholder="Samsung"/><br /><br />
 
                     <label for="manufacturing_date">Дата производства : </label><br />
-                    <input type="date" id="manufacturing_date" name="manufacturing_date" value="${manufacturing_date}"/><br /><br />
+                    <c:if test="${empty manufacturing_date}">
+                        <input type="date" id="manufacturing_date" name="manufacturing_date" min="2000-01-01" value="2000-01-01"/><br /><br />
+                    </c:if>
+                    <c:if test="${not empty manufacturing_date}">
+                        <input type="date" id="manufacturing_date" name="manufacturing_date" min="2000-01-01" value="${manufacturing_date}"/><br /><br />
+                    </c:if>
+
 
                     <label for="delivery_date">Дата поставки : </label><br />
-                    <input type="date" id="delivery_date" name="delivery_date" value="${delivery_date}"/><br /><br />
+                    <c:if test="${empty delivery_date}">
+                        <input type="date" id="delivery_date" name="delivery_date" min="2000-01-01" value="2000-01-01"/><br /><br />
+                    </c:if>
+                    <c:if test="${not empty delivery_date}">
+                        <input type="date" id="delivery_date" name="delivery_date" min="2000-01-01" value="${delivery_date}"/><br /><br />
+                    </c:if>
 
                     <label for="count_left">Количество на складе : </label><br />
                     <input type="number" id="count_left" name="count_left" min="1" value="${count_left}" placeholder="100"/><br /><br />

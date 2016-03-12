@@ -536,7 +536,7 @@ public class JdbcStorage {
     }
 
     public void addGood(String name, String description, int price, String category, String color, int providerId,
-                        String manufacturerName, Date manufacturingDate, Date deliveryDate, int countLeft) {
+                        String manufacturerName, String manufacturingDate, String deliveryDate, int countLeft) {
 
         try (Connection connection = this.getConnection();
              PreparedStatement statement = connection.prepareStatement(
@@ -550,8 +550,8 @@ public class JdbcStorage {
             statement.setString(5, color);
             statement.setInt(6, providerId);
             statement.setString(7, manufacturerName);
-            statement.setDate(8, (java.sql.Date) manufacturingDate);
-            statement.setDate(9, (java.sql.Date) deliveryDate);
+            statement.setString(8, manufacturingDate);
+            statement.setString(9, deliveryDate);
             statement.setInt(10, countLeft);
 
             statement.execute();

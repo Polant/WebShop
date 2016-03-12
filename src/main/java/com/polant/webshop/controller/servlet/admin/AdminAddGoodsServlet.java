@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
@@ -32,6 +33,12 @@ public class AdminAddGoodsServlet extends HttpServlet {
     }
 
     private void addGood(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            req.setCharacterEncoding("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
         String name = req.getParameter("name");
         String description = req.getParameter("description");
         int price = Integer.valueOf(req.getParameter("price"));
@@ -39,14 +46,8 @@ public class AdminAddGoodsServlet extends HttpServlet {
         String color = req.getParameter("color");
         int providerId = 1;//Заглушка.
         String manufacturerName = req.getParameter("manufacturer_name");
-        Date manufacturingDate = null;
-        Date deliveryDate = null;
-        try {
-            manufacturingDate = DateFormat.getInstance().parse(req.getParameter("manufacturing_date"));
-            deliveryDate = DateFormat.getInstance().parse(req.getParameter("delivery_date"));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        String manufacturingDate = req.getParameter("manufacturing_date");
+        String deliveryDate = req.getParameter("delivery_date");
         int countLeft = Integer.valueOf(req.getParameter("count_left"));
 
         storage.addGood(name, description, price, category, color, providerId, manufacturerName,
