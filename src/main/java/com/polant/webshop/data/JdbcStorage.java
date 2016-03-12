@@ -509,4 +509,23 @@ public class JdbcStorage {
         }
         return null;
     }
+
+    /**
+     * @return true if update run successfully.
+     */
+    public boolean updateUserProfile(int userId, String passwordNew, String email) {
+        try (Connection connection = this.getConnection();
+             PreparedStatement statement = connection.prepareStatement("UPDATE users SET password=?, email=? WHERE id=?")) {
+
+            statement.setString(1, passwordNew);
+            statement.setString(2, email);
+            statement.setInt(3, userId);
+
+            return statement.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
