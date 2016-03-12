@@ -10,14 +10,11 @@
 
 <h2>Мой профиль</h2>
 
-<form action="${pageContext.servletContext.contextPath}/user/profile/change" method="post">
-
-    <input type="hidden" name="user" value="${user}" />
-
+<form>
     <p>Логин: ${user.login}</p>
     <p>Email: ${user.email}</p>
 
-    <input type="submit" value="Изменить профиль" />
+    <a href="${pageContext.servletContext.contextPath}/user/profile/change">Изменить профиль</a>
 </form>
 
 

@@ -12,10 +12,10 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Данный сервлет обеспечивает работу с личный кабинетом пользователя.
+ * Сервлет, отвечающий за редактирование профиля пользователя.
  */
-@WebServlet("/user/profile")
-public class ShowUserProfileServlet extends HttpServlet {
+@WebServlet("/user/profile/change")
+public class EditUserProfileServlet extends HttpServlet {
 
     private final JdbcStorage storage = JdbcStorage.getInstance();
 
@@ -26,8 +26,18 @@ public class ShowUserProfileServlet extends HttpServlet {
             int userId = (int)session.getAttribute("user_id");
             User user = storage.findUserById(userId);
 
-            req.setAttribute("user", user);
-            req.getRequestDispatcher("/view/user_profile_show.jsp").forward(req, resp);
+            req.setAttribute("email", user.getEmail());
+            req.setAttribute("password", user.getPassword());
+            req.getRequestDispatcher("/view/user_profile_edit.jsp").forward(req, resp);
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        changeUserProfile(req, resp);
+    }
+
+    private void changeUserProfile(HttpServletRequest req, HttpServletResponse resp) {
+
     }
 }
