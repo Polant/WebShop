@@ -3,11 +3,6 @@
 <html>
 <head>
     <title>Add goods</title>
-    <style>
-        .error_message{
-            color: firebrick;
-        }
-    </style>
 </head>
 <body>
 
@@ -35,25 +30,17 @@
                     <input type="number" id="price" name="price" value="${price}" min="1" placeholder="700$"/><br /><br />
 
                     <label for="category">Категория : </label><br />
-                    <%--<input type="text" id="category" name="category" value="${category}" placeholder="Смартфон"/><br /><br />--%>
-
                     <select id="category" name="category" size="1">
-                        <option selected="selected" value="Смартфон">Смартфоны</option>
-                        <option value="Планшет">Планшеты</option>
-                        <option value="ПК">ПК</option>
-                        <option value="Ноутбук">Ноутбуки</option>
-                        <option value="Телевизор">Телевизоры</option>
+                        <c:forEach items="${categoriesList}" var="category">
+                            <option value="${category}" ${category == selectedCategory ? 'selected' : ''}>${category}</option>
+                        </c:forEach>
                     </select><br /><br />
 
                     <label for="color">Цвет : </label><br />
-                    <%--<input type="text" id="color" name="color" value="${color}" placeholder="Черный"/><br /><br />--%>
-
                     <select id="color" name="color" size="1">
-                        <option value="Красный">Красный</option>
-                        <option value="Зеленый">Зеленый</option>
-                        <option value="Синий">Синий</option>
-                        <option selected="selected" value="Черный">Черный</option>
-                        <option value="Белый">Белый</option>
+                        <c:forEach items="${colorsList}" var="color">
+                            <option value="${color}" ${color == selectedColor ? 'selected' : ''}>${color}</option>
+                        </c:forEach>
                     </select><br /><br />
 
                 </div>

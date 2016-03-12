@@ -9,10 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Сервлет, обслуживающий добавление товара в магазин.
@@ -22,8 +21,29 @@ public class AdminAddGoodsServlet extends HttpServlet {
 
     private final JdbcStorage storage = JdbcStorage.getInstance();
 
+    private final String[] colors = {"Красный", "Зеленый", "Синий","Черный", "Белый"};
+    private final String[] categories = {"Смартфон", "Планшет", "ПК","Ноутбук", "Телевизор"};
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        String requestColor = req.getParameter("color");
+        String requestCategory = req.getParameter("category");
+
+        if (requestColor == null) requestColor = colors[0];
+        if (requestCategory == null) requestCategory = categories[0];
+
+        List<String> colorsList = new ArrayList<>();
+        List<String> categoriesList = new ArrayList<>();
+
+        Collections.addAll(colorsList, colors);
+        Collections.addAll(categoriesList, categories);
+
+        req.setAttribute("colorsList", colorsList);
+        req.setAttribute("selectedColor", requestColor);
+
+        req.setAttribute("categoriesList", categoriesList);
+        req.setAttribute("selectedCategory", requestCategory);
         req.getRequestDispatcher("/view/admin_add_new_good.jsp").forward(req, resp);
     }
 
