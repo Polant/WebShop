@@ -64,12 +64,12 @@
 
     </table><br/><br/>
 
-    <label for="quantity">Количество: </label>
     <c:choose>
         <c:when test="${not empty IS_ADMIN}">
             <a href="${pageContext.servletContext.contextPath}/admin/goods/edit?good_id=${good.id}">Редактировать товар</a>
         </c:when>
         <c:otherwise>
+            <label for="quantity">Количество: </label>
             <c:choose>
                 <c:when test="${good.countLeft > 0}">
                     <input type="number" id="quantity" name="quantity" min="0" max="${good.countLeft}" value="1">
