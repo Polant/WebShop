@@ -23,15 +23,14 @@ public class EditUserProfileServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
-        if (session != null && !session.isNew()) {
-            int userId = (int)session.getAttribute("user_id");
-            User user = storage.findUserById(userId);
 
-            req.setAttribute("email", user.getEmail());
-            req.setAttribute("password_old", user.getPassword());
-            req.setAttribute("password_new", user.getPassword());
-            req.getRequestDispatcher("/view/user_profile_edit.jsp").forward(req, resp);
-        }
+        int userId = (int) session.getAttribute("user_id");
+        User user = storage.findUserById(userId);
+
+        req.setAttribute("email", user.getEmail());
+        req.setAttribute("password_old", user.getPassword());
+        req.setAttribute("password_new", user.getPassword());
+        req.getRequestDispatcher("/view/user_profile_edit.jsp").forward(req, resp);
     }
 
     @Override

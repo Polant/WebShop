@@ -22,12 +22,10 @@ public class ShowUserProfileServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
-        if (session != null && !session.isNew()) {
-            int userId = (int)session.getAttribute("user_id");
-            User user = storage.findUserById(userId);
+        int userId = (int) session.getAttribute("user_id");
+        User user = storage.findUserById(userId);
 
-            req.setAttribute("user", user);
-            req.getRequestDispatcher("/view/user_profile_show.jsp").forward(req, resp);
-        }
+        req.setAttribute("user", user);
+        req.getRequestDispatcher("/view/user_profile_show.jsp").forward(req, resp);
     }
 }
