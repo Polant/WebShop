@@ -654,4 +654,26 @@ public class JdbcStorage {
         }
         return false;
     }
+
+    public List<User> getUsers() {
+        List<User> result = new ArrayList<>();
+        try (Connection connection = this.getConnection(); Statement statement = connection.createStatement()) {
+
+            ResultSet set = statement.executeQuery("SELECT * FROM users");
+            while (set.next()){
+                User user = new User(
+                        set.getInt("id"),
+                        set.getString("login"),
+                        set.getString("password"),
+                        set.getString("email"),
+                        set.getBoolean("isBanned"),
+                        set.getBoolean("isAdmin")
+                );
+                result.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }
