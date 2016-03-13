@@ -55,14 +55,12 @@ public class LoginServlet extends HttpServlet {
 
                 if (user.getIsAdmin()) {
                     newSession.setAttribute("IS_ADMIN", true);
-                    resp.sendRedirect(String.format("%s%s", req.getContextPath(), "/"));
-                    return;
+//                    resp.sendRedirect(String.format("%s%s", req.getContextPath(), "/"));
+//                    return;
                 }
             }
-            if (user.getIsBanned()) {
+            if (user != null && user.getIsBanned()) {
                 LOGGER.debug(String.format("BANNED %s tried to log in", user));
-            } else {
-                LOGGER.debug(String.format("AUTHORIZATION BY login:%s ; password: %s FAILED", login, password));
             }
         } else {
             LOGGER.debug(String.format("AUTHORIZATION BY login:%s ; password: %s FAILED", login, password));

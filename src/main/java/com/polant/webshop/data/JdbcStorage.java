@@ -81,7 +81,7 @@ public class JdbcStorage {
         }catch (SQLException e) {
             e.printStackTrace();
         }
-        LOGGER.debug(String.format("Authorization %s%s FAILED", login, password));
+        LOGGER.debug(String.format("Authorization by %s%s FAILED", login, password));
         return null;
     }
 
