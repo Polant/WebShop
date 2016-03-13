@@ -84,15 +84,13 @@ public class AdminGoodsServlet extends HttpServlet {
 
         if (isCalledForEditGoods(req)) {
             int id = Integer.valueOf(req.getParameter("id"));
-            if (storage.editGood(id, name, description, price, category, color, providerId,
-                    manufacturerName, manufacturingDate, deliveryDate, countLeft)) {
+            if (storage.editGood(id, name, description, price, category, color, providerId, manufacturerName, manufacturingDate, deliveryDate, countLeft)) {
                 LOGGER.debug(String.format("Edit good id:%d SUCCESS", id));
             } else {
                 LOGGER.debug(String.format("Edit good id:%d FAILED", id));
             }
         } else {
-            storage.addGood(name, description, price, category, color, providerId, manufacturerName,
-                    manufacturingDate, deliveryDate, countLeft);
+            storage.addGood(name, description, price, category, color, providerId, manufacturerName, manufacturingDate, deliveryDate, countLeft);
         }
         resp.sendRedirect(String.format("%s%s", req.getContextPath(), "/"));
     }

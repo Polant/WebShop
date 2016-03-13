@@ -2,6 +2,7 @@ package com.polant.webshop.controller.servlet.authorization;
 
 import com.polant.webshop.data.JdbcStorage;
 import com.polant.webshop.model.User;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,6 +18,8 @@ import java.util.regex.Pattern;
  */
 @WebServlet("/user/registration")
 public class RegistrationServlet extends HttpServlet {
+
+    private static final Logger LOGGER = Logger.getLogger(RegistrationServlet.class);
 
     private final JdbcStorage storage = JdbcStorage.getInstance();
 
@@ -91,6 +94,8 @@ public class RegistrationServlet extends HttpServlet {
         HttpSession newSession = req.getSession(true);
         newSession.setAttribute("login", user.getLogin());
         newSession.setAttribute("user_id", user.getId());
+
+        LOGGER.debug(String.format("%s SUCCESS", user));
 
         resp.sendRedirect(String.format("%s%s", req.getContextPath(), "/"));
     }
