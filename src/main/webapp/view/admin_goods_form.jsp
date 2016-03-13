@@ -22,6 +22,8 @@
     </c:choose>
     <fieldset style="background-color: darkseagreen">
 
+        <input type="hidden" name="id" value="${editGood.id}"/>
+
             <div style="margin: 0px auto; text-align: center">
 
                 <div style="float:left;">

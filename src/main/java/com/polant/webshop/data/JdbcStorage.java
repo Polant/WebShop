@@ -535,7 +535,7 @@ public class JdbcStorage {
         return false;
     }
 
-    public void addGood(String name, String description, int price, String category, String color, int providerId,
+    public void addGood(String name, String description, double price, String category, String color, int providerId,
                         String manufacturerName, String manufacturingDate, String deliveryDate, int countLeft) {
 
         try (Connection connection = this.getConnection();
@@ -545,7 +545,7 @@ public class JdbcStorage {
 
             statement.setString(1, name);
             statement.setString(2, description);
-            statement.setInt(3, price);
+            statement.setDouble(3, price);
             statement.setString(4, category);
             statement.setString(5, color);
             statement.setInt(6, providerId);
@@ -559,5 +559,32 @@ public class JdbcStorage {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean editGood(int id, String name, String description, double price, String category, String color, int providerId,
+                            String manufacturerName, String manufacturingDate, String deliveryDate, int countLeft) {
+        try (Connection connection = this.getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     "UPDATE goods SET name=?, description=?, price=?, category=?, color=?, provider_id=?, " +
+                             "manufacturer_name=?, manufacturing_date=?, delivery_date=?, count_left=? WHERE id=?")){
+
+            statement.setString(1, name);
+            statement.setString(2, description);
+            statement.setDouble(3, price);
+            statement.setString(4, category);
+            statement.setString(5, color);
+            statement.setInt(6, providerId);
+            statement.setString(7, manufacturerName);
+            statement.setString(8, manufacturingDate);
+            statement.setString(9, deliveryDate);
+            statement.setInt(10, countLeft);
+            statement.setInt(11, id);
+
+            return statement.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

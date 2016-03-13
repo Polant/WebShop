@@ -2,6 +2,7 @@ package com.polant.webshop.controller.servlet.admin;
 
 import com.polant.webshop.data.JdbcStorage;
 import com.polant.webshop.model.Good;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -19,6 +19,8 @@ import java.util.List;
  */
 @WebServlet(urlPatterns = {"/admin/goods/add", "/admin/goods/edit"})
 public class AdminGoodsServlet extends HttpServlet {
+
+    private static final Logger LOGGER = Logger.getLogger(AdminGoodsServlet.class);
 
     private final JdbcStorage storage = JdbcStorage.getInstance();
 
@@ -63,22 +65,6 @@ public class AdminGoodsServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (isCalledForEditGoods(req)){
-            editGood(req, resp);
-        }else {
-            addGood(req, resp);
-        }
-    }
-
-    private boolean isCalledForEditGoods(HttpServletRequest req){
-        return req.getRequestURI().lastIndexOf("edit") > 0;
-    }
-
-    private void editGood(HttpServletRequest req, HttpServletResponse resp) {
-
-    }
-
-    private void addGood(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             req.setCharacterEncoding("UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -87,7 +73,7 @@ public class AdminGoodsServlet extends HttpServlet {
 
         String name = req.getParameter("name");
         String description = req.getParameter("description");
-        int price = Integer.valueOf(req.getParameter("price"));
+        double price = Double.valueOf(req.getParameter("price"));
         String category = req.getParameter("category");
         String color = req.getParameter("color");
         int providerId = 1;//Заглушка.
@@ -96,9 +82,22 @@ public class AdminGoodsServlet extends HttpServlet {
         String deliveryDate = req.getParameter("delivery_date");
         int countLeft = Integer.valueOf(req.getParameter("count_left"));
 
-        storage.addGood(name, description, price, category, color, providerId, manufacturerName,
-                manufacturingDate, deliveryDate, countLeft);
-
+        if (isCalledForEditGoods(req)) {
+            int id = Integer.valueOf(req.getParameter("id"));
+            if (storage.editGood(id, name, description, price, category, color, providerId,
+                    manufacturerName, manufacturingDate, deliveryDate, countLeft)) {
+                LOGGER.debug(String.format("Edit good id:%d SUCCESS", id));
+            } else {
+                LOGGER.debug(String.format("Edit good id:%d FAILED", id));
+            }
+        } else {
+            storage.addGood(name, description, price, category, color, providerId, manufacturerName,
+                    manufacturingDate, deliveryDate, countLeft);
+        }
         resp.sendRedirect(String.format("%s%s", req.getContextPath(), "/"));
+    }
+
+    private boolean isCalledForEditGoods(HttpServletRequest req){
+        return req.getRequestURI().lastIndexOf("edit") > 0;
     }
 }
