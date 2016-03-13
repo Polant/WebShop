@@ -3,8 +3,22 @@
 <html>
 <head>
     <title>Users</title>
+    <style>
+        table {
+            width: 400px;
+            margin: auto; /* Выравнивание формы по центру окна  */
+        }
+        td {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
+
+<jsp:include page="header.jsp"/>
+
+<h2 style="text-align: center">Зарегистрированные пользователи сайта</h2>
+
 <table border="1">
     <tr>
         <td>Id пользователя</td>
