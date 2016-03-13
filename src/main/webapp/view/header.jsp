@@ -19,6 +19,7 @@
                 </c:when>
                 <c:otherwise>
                     <td><a href="${pageContext.servletContext.contextPath}/admin/users">Пользователи</a></td>
+                    <td><a href="${pageContext.servletContext.contextPath}/admin/orders">Заказы</a></td>
                 </c:otherwise>
             </c:choose>
         </tr>

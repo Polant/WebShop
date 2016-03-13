@@ -715,4 +715,27 @@ public class JdbcStorage {
         }
         return false;
     }
+
+
+    public List<Order> getRegisteredOrdersOrders() {
+        List<Order> result = new ArrayList<>();
+        try (Connection connection = this.getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM orders WHERE status!=?")) {
+
+            statement.setString(1, ORDER_CANCELLED);
+            ResultSet set = statement.executeQuery();
+            while (set.next()){
+                Order user = new Order(
+                        set.getInt("id"),
+                        set.getString("status"),
+                        set.getInt("user_id"),
+                        set.getDate("order_date")
+                );
+                result.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

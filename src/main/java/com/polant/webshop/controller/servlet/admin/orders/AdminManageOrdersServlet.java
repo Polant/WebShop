@@ -33,7 +33,7 @@ public class AdminManageOrdersServlet extends HttpServlet {
                 LOGGER.debug(String.format("ORDER id:%d - SET STATUS %s", orderId, JdbcStorage.ORDER_REVOKED));
             }
         }
-        //resp.sentRedirect();
+        resp.sendRedirect(String.format("%s%s", req.getContextPath(), "/admin/orders"));
     }
 
     /**
