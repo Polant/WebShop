@@ -587,4 +587,55 @@ public class JdbcStorage {
         }
         return false;
     }
+
+    //----------------Удаление товара-----------------------//
+
+    /**
+     * Если с данным товаром не ассоциировано ни одного заказа, то можно удалить его из базы.
+     * В противном случае просто присваиваю count_left = 0, чтобы каскадно не удалялись orderItems.
+     */
+    public boolean deleteGood(int id) {
+        try (Connection connection = this.getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT COUNT(good_id) AS count_order_items FROM order_items WHERE good_id=?")) {
+
+            statement.setInt(1, id);
+            ResultSet set = statement.executeQuery();
+            if (set.next()) {
+                if (set.getInt("count_order_items") > 0) {
+                    return deleteGoodFromStock(id);
+                } else {
+                    return deleteGoodFromDatabase(id);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private boolean deleteGoodFromStock(int id){
+        try(Connection connection = this.getConnection();
+            PreparedStatement statement = connection.prepareStatement("UPDATE goods SET count_left=0 WHERE id=?")) {
+
+            statement.setInt(1, id);
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private boolean deleteGoodFromDatabase(int id) {
+        try(Connection connection = this.getConnection();
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM goods WHERE id=?")) {
+
+            statement.setInt(1, id);
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    //--------------------------------//
 }
