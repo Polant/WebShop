@@ -1,4 +1,4 @@
-package com.polant.webshop.controller.servlet;
+package com.polant.webshop.controller.servlet.user.orders;
 
 import com.polant.webshop.data.JdbcStorage;
 import com.polant.webshop.model.Order;
@@ -17,10 +17,10 @@ import java.util.List;
  * Данный сервлет обрабатывает вывод заказов пользователя.
  */
 @WebServlet("/user/orders")
-public class UserOrdersServlet extends HttpServlet {
+public class ShowUserOrdersServlet extends HttpServlet {
 
     private static final String ORDERS_JSP = "/view/user_orders.jsp";
-    private static final Logger LOGGER = Logger.getLogger(UserOrdersServlet.class);
+    private static final Logger LOGGER = Logger.getLogger(ShowUserOrdersServlet.class);
 
     private final JdbcStorage storage = JdbcStorage.getInstance();
 
