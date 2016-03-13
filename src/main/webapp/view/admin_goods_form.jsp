@@ -12,34 +12,40 @@
 
 <div id="add_goods_form" style="float:left;">
 
-    <form action="${pageContext.servletContext.contextPath}/admin/goods/add" method="post">
-
-        <fieldset style="background-color: darkseagreen">
+    <%--В зевисимости от назвачения запроса к jsp ставлю соответствующий атрибут action=""--%>
+    <c:choose>
+        <c:when test="${IS_EDIT}">
+            <form action="${pageContext.servletContext.contextPath}/admin/goods/edit" method="post"> </c:when>
+        <c:otherwise>
+                <form action="${pageContext.servletContext.contextPath}/admin/goods/add" method="post">
+                    </c:otherwise>
+    </c:choose>
+    <fieldset style="background-color: darkseagreen">
 
             <div style="margin: 0px auto; text-align: center">
 
                 <div style="float:left;">
 
                     <label for="name">Название : </label><br />
-                    <input type="text" id="name" name="name" value="${name}" placeholder="Samsung Galaxy S6"/><br /><br />
+                    <input type="text" id="name" name="name" value="${editGood.name}" placeholder="Samsung Galaxy S6"/><br /><br />
 
                     <label for="description">Описание : </label><br />
-                    <textarea id="description" name="description" value="${description}" cols="22" rows="5" placeholder="Качественный смартфон..."></textarea><br /><br />
+                    <textarea id="description" name="description" cols="22" rows="5" placeholder="Качественный смартфон...">${editGood.description}</textarea><br /><br />
 
                     <label for="price">Цена : </label><br />
-                    <input type="number" id="price" name="price" value="${price}" min="1" placeholder="700$"/><br /><br />
+                    <input type="number" id="price" name="price" value="${editGood.price}" min="1" placeholder="700$"/><br /><br />
 
                     <label for="category">Категория : </label><br />
                     <select id="category" name="category" size="1">
                         <c:forEach items="${categoriesList}" var="category">
-                            <option value="${category}" ${category == selectedCategory ? 'selected' : ''}>${category}</option>
+                            <option value="${category}" ${category == editGood.category ? 'selected' : ''}>${category}</option>
                         </c:forEach>
                     </select><br /><br />
 
                     <label for="color">Цвет : </label><br />
                     <select id="color" name="color" size="1">
                         <c:forEach items="${colorsList}" var="color">
-                            <option value="${color}" ${color == selectedColor ? 'selected' : ''}>${color}</option>
+                            <option value="${color}" ${color == editGood.color ? 'selected' : ''}>${color}</option>
                         </c:forEach>
                     </select><br /><br />
 
@@ -48,27 +54,27 @@
                 <div style="float:left;">
 
                     <label for="manufacturer_name">Производитель : </label><br />
-                    <input type="text" id="manufacturer_name" name="manufacturer_name" value="${manufacturer_name}" placeholder="Samsung"/><br /><br />
+                    <input type="text" id="manufacturer_name" name="manufacturer_name" value="${editGood.manufacturerName}" placeholder="Samsung"/><br /><br />
 
                     <label for="manufacturing_date">Дата производства : </label><br />
-                    <c:if test="${empty manufacturing_date}">
+                    <c:if test="${empty editGood}">
                         <input type="date" id="manufacturing_date" name="manufacturing_date" min="2000-01-01" value="2000-01-01"/><br /><br />
                     </c:if>
-                    <c:if test="${not empty manufacturing_date}">
-                        <input type="date" id="manufacturing_date" name="manufacturing_date" min="2000-01-01" value="${manufacturing_date}"/><br /><br />
+                    <c:if test="${not empty editGood}">
+                        <input type="date" id="manufacturing_date" name="manufacturing_date" min="2000-01-01" value="${editGood.manufacturedDate}"/><br /><br />
                     </c:if>
 
 
                     <label for="delivery_date">Дата поставки : </label><br />
-                    <c:if test="${empty delivery_date}">
+                    <c:if test="${empty editGood}">
                         <input type="date" id="delivery_date" name="delivery_date" min="2000-01-01" value="2000-01-01"/><br /><br />
                     </c:if>
-                    <c:if test="${not empty delivery_date}">
-                        <input type="date" id="delivery_date" name="delivery_date" min="2000-01-01" value="${delivery_date}"/><br /><br />
+                    <c:if test="${not empty editGood}">
+                        <input type="date" id="delivery_date" name="delivery_date" min="2000-01-01" value="${editGood.deliveryDate}"/><br /><br />
                     </c:if>
 
                     <label for="count_left">Количество на складе : </label><br />
-                    <input type="number" id="count_left" name="count_left" min="1" value="${count_left}" placeholder="100"/><br /><br />
+                    <input type="number" id="count_left" name="count_left" min="1" value="${editGood.countLeft}" placeholder="100"/><br /><br />
 
                 </div>
 
@@ -76,7 +82,14 @@
 
         </fieldset><br/>
 
-        <input type="submit" value="Добавить товар" />
+        <c:choose>
+            <c:when test="${IS_EDIT}">
+                <input type="submit" value="Подтвердить изменения" />
+            </c:when>
+            <c:otherwise>
+                <input type="submit" value="Добавить товар" />
+            </c:otherwise>
+        </c:choose>
         <input type="reset" value="Сбросить" />
 
     </form>

@@ -1,6 +1,7 @@
 package com.polant.webshop.controller.servlet.admin;
 
 import com.polant.webshop.data.JdbcStorage;
+import com.polant.webshop.model.Good;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,13 +17,15 @@ import java.util.List;
 /**
  * Сервлет, обслуживающий добавление товара в магазин.
  */
-@WebServlet("/admin/goods/add")
-public class AdminAddGoodsServlet extends HttpServlet {
+@WebServlet(urlPatterns = {"/admin/goods/add", "/admin/goods/edit"})
+public class AdminGoodsServlet extends HttpServlet {
 
     private final JdbcStorage storage = JdbcStorage.getInstance();
 
     private final List<String> colors = new ArrayList<>();
     private final List<String> categories = new ArrayList<>();
+
+    private static final String IS_EDIT = "IS_EDIT";
 
     {
         colors.add("Красный");
@@ -41,23 +44,38 @@ public class AdminAddGoodsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String requestColor = req.getParameter("color");
-        String requestCategory = req.getParameter("category");
+        //Проверяю назвачение запроса.
+        if (isCalledForEditGoods(req)) {
+            int goodId = Integer.valueOf(req.getParameter("good_id"));
+            Good editGood = storage.findGoodById(goodId);
 
-        if (requestColor == null) requestColor = colors.get(0);
-        if (requestCategory == null) requestCategory = categories.get(0);
+            req.setAttribute("editGood", editGood);
+            req.setAttribute(IS_EDIT, true);
+        }else {
+            req.setAttribute(IS_EDIT, false);
+        }
 
         req.setAttribute("colorsList", colors);
-        req.setAttribute("selectedColor", requestColor);
-
         req.setAttribute("categoriesList", categories);
-        req.setAttribute("selectedCategory", requestCategory);
+
         req.getRequestDispatcher("/view/admin_goods_form.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        addGood(req, resp);
+        if (isCalledForEditGoods(req)){
+            editGood(req, resp);
+        }else {
+            addGood(req, resp);
+        }
+    }
+
+    private boolean isCalledForEditGoods(HttpServletRequest req){
+        return req.getRequestURI().lastIndexOf("edit") > 0;
+    }
+
+    private void editGood(HttpServletRequest req, HttpServletResponse resp) {
+
     }
 
     private void addGood(HttpServletRequest req, HttpServletResponse resp) throws IOException {

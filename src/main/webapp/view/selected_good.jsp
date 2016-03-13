@@ -13,6 +13,16 @@
 <form action="${pageContext.servletContext.contextPath}/user/basket" method="post">
 
     <input type="hidden" name="good_id" value="${good.id}" />
+    <%--<input type="hidden" name="good_name" value="${good.name}" />--%>
+    <%--<input type="hidden" name="good_description" value="${good.description}" />--%>
+    <%--<input type="hidden" name="good_price" value="${good.price}" />--%>
+    <%--<input type="hidden" name="good_category" value="${good.category}" />--%>
+    <%--<input type="hidden" name="good_color" value="${good.color}" />--%>
+    <%--&lt;%&ndash;<input type="hidden" name="good_provider_id" value="${good.providerId}" />&ndash;%&gt;--%>
+    <%--<input type="hidden" name="good_manufacturer_name" value="${good.manufacturerName}" />--%>
+    <%--<input type="hidden" name="good_manufacturing_date" value="${good.manufacturedDate}" />--%>
+    <%--<input type="hidden" name="good_delivery_date" value="${good.deliveryDate}" />--%>
+    <%--<input type="hidden" name="good_count_left" value="${good.countLeft}" />--%>
 
     <table border="1" bgcolor="#f5deb3">
         <tr>
@@ -56,13 +66,20 @@
 
     <label for="quantity">Количество: </label>
     <c:choose>
-        <c:when test="${good.countLeft > 0}">
-            <input type="number" id="quantity" name="quantity" min="0" max="${good.countLeft}" value="1">
-            <input type="submit" value="Добавить в корзину" />
+        <c:when test="${not empty IS_ADMIN}">
+            <a href="${pageContext.servletContext.contextPath}/admin/goods/edit?good_id=${good.id}">Редактировать товар</a>
         </c:when>
         <c:otherwise>
-            <input type="number" id="quantity" name="quantity" value="0" disabled>
-            <input type="submit" value="Добавить в корзину" disabled/>
+            <c:choose>
+                <c:when test="${good.countLeft > 0}">
+                    <input type="number" id="quantity" name="quantity" min="0" max="${good.countLeft}" value="1">
+                    <input type="submit" value="Добавить в корзину" />
+                </c:when>
+                <c:otherwise>
+                    <input type="number" id="quantity" name="quantity" value="0" disabled>
+                    <input type="submit" value="Добавить в корзину" disabled/>
+                </c:otherwise>
+            </c:choose>
         </c:otherwise>
     </c:choose>
 
