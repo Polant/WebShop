@@ -23,6 +23,7 @@ public class AdminShowOrdersServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Order> orders = storage.getRegisteredOrdersOrders();
         req.setAttribute("orders", orders);
+        req.setAttribute("JdbcStorage", storage);
         req.getRequestDispatcher("/view/admin_orders.jsp").forward(req, resp);
     }
 }
