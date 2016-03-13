@@ -676,4 +676,17 @@ public class JdbcStorage {
         }
         return result;
     }
+
+    public boolean setUserAdminAccessStatus(int userId, boolean openAdminAccess) {
+        try(Connection connection = this.getConnection();
+            PreparedStatement statement = connection.prepareStatement("UPDATE users SET isAdmin=? WHERE id=?")) {
+
+            statement.setBoolean(1, openAdminAccess);
+            statement.setInt(2, userId);
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

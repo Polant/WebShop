@@ -61,7 +61,7 @@ public class User {
         isBanned = banned;
     }
 
-    public boolean isAdmin() {
+    public boolean getIsAdmin() {
         return isAdmin;
     }
 

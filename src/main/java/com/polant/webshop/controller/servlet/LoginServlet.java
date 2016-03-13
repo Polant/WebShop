@@ -42,7 +42,7 @@ public class LoginServlet extends HttpServlet {
                 newSession.setAttribute("login", login);
                 newSession.setAttribute("user_id", user.getId());
 
-                if (user.isAdmin()){
+                if (user.getIsAdmin()){
                     newSession.setAttribute("IS_ADMIN", true);
                     resp.sendRedirect(String.format("%s%s", req.getContextPath(), "/"));
                     return;
