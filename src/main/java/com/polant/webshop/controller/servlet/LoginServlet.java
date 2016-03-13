@@ -37,7 +37,7 @@ public class LoginServlet extends HttpServlet {
         String password = req.getParameter("password");
         if (login != null && password != null){
             User user;
-            if ((user = storage.checkLogin(login, password)) != null && !user.isBanned()){
+            if ((user = storage.checkLogin(login, password)) != null && !user.getIsBanned()){
                 HttpSession newSession = req.getSession(true);
                 newSession.setAttribute("login", login);
                 newSession.setAttribute("user_id", user.getId());

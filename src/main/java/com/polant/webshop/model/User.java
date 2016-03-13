@@ -53,7 +53,7 @@ public class User {
         this.email = email;
     }
 
-    public boolean isBanned() {
+    public boolean getIsBanned() {
         return isBanned;
     }
 

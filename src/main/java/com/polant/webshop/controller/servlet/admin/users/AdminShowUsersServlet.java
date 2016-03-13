@@ -23,6 +23,6 @@ public class AdminShowUsersServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<User> users = storage.getUsers();
         req.setAttribute("users", users);
-        req.getRequestDispatcher("/view/admin_users,jsp").forward(req, resp);
+        req.getRequestDispatcher("/view/admin_users.jsp").forward(req, resp);
     }
 }

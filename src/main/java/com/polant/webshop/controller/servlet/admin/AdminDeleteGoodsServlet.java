@@ -1,4 +1,4 @@
-package com.polant.webshop.controller.servlet.admin.goods;
+package com.polant.webshop.controller.servlet.admin;
 
 import com.polant.webshop.data.JdbcStorage;
 import org.apache.log4j.Logger;
