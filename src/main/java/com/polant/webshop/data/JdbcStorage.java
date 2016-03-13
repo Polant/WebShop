@@ -29,6 +29,8 @@ public class JdbcStorage {
 
     public static final String ORDER_REGISTERED = "зарегистрирован";
     public static final String ORDER_CANCELLED = "не подтвержден";
+    public static final String ORDER_PAYED = "оплачен";
+    public static final String ORDER_REVOKED = "отменен";
 
     private JdbcStorage(){
         try {
@@ -46,6 +48,16 @@ public class JdbcStorage {
         return DriverManager.getConnection(prop.getProperty("jdbc.url"),
                     prop.getProperty("jdbc.username"),
                     prop.getProperty("jdbc.password"));
+    }
+
+    public String getORDER_REGISTERED() {
+        return ORDER_REGISTERED;
+    }
+    public String getORDER_REVOKED() {
+        return ORDER_REVOKED;
+    }
+    public String getORDER_PAYED() {
+        return ORDER_PAYED;
     }
 
     /**
@@ -683,6 +695,20 @@ public class JdbcStorage {
 
             statement.setBoolean(1, openAdminAccess);
             statement.setInt(2, userId);
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    public boolean setOrderStatus(int orderId, String newStatus) {
+        try(Connection connection = this.getConnection();
+            PreparedStatement statement = connection.prepareStatement("UPDATE orders SET status=? WHERE id=?")) {
+
+            statement.setString(1, newStatus);
+            statement.setInt(2, orderId);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
