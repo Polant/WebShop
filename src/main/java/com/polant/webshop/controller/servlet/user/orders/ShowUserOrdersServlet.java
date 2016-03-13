@@ -27,17 +27,12 @@ public class ShowUserOrdersServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
-        if (session != null && !session.isNew()) {
 
-            int userId = (int)session.getAttribute("user_id");
-            LOGGER.debug(String.format("%d show his orders", userId));
+        int userId = (int) session.getAttribute("user_id");
+        LOGGER.debug(String.format("%d show his orders", userId));
 
-            List<Order> orders = this.storage.getUserOrders(userId);
-            req.setAttribute("orders", orders);
-            req.getRequestDispatcher(ORDERS_JSP).forward(req, resp);
-        }
-        else{
-            //TODO: если пользователь не авторизовался, то перенаправить его на какой-то error.jsp.
-        }
+        List<Order> orders = this.storage.getUserOrders(userId);
+        req.setAttribute("orders", orders);
+        req.getRequestDispatcher(ORDERS_JSP).forward(req, resp);
     }
 }

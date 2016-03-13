@@ -8,12 +8,11 @@
 
 <jsp:include page="header.jsp" />
 
-<h2>Моя корзина</h2>
+<h2>Мои заказы</h2>
 
-<h3 style="vertical-align: middle; align-content: center"><b>Корзина пуста!</b></h3><br/>
 <h4 style="vertical-align: middle; align-content: center">
     <b>
-        Пожалуйста, авторизуйтесь на сайте, чтобы иметь возможность добавлять товары в корзину!
+        Пожалуйста, авторизуйтесь на сайте, чтобы иметь возможность просматривать и добавлять свои заказы.
     </b>
 </h4>
 
