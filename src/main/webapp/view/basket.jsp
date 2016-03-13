@@ -32,7 +32,7 @@
             <td>${good.orderItem.quantity}</td>
             <td>${good.orderGood.price * good.orderItem.quantity}$</td>
             <c:set var="orderSum" value="${orderSum + good.orderGood.price * good.orderItem.quantity}"/>
-            <td><a href="${pageContext.servletContext.contextPath}/user/basket/delete_order_item?order_id=${order.id}&item_id=${good.orderItem.id}&delete_all_items=false">Удалить из заказа</a> </td>
+            <td><a href="${pageContext.servletContext.contextPath}/user/orders/delete?order_id=${order.id}&item_id=${good.orderItem.id}&delete_all_items=false">Удалить из заказа</a> </td>
         </tr>
     </c:forEach>
 </table>
@@ -57,7 +57,7 @@
 
 <br/><br/>
 
-<a href="${pageContext.servletContext.contextPath}/user/basket/delete_order_item?order_id=${order.id}&delete_all_items=true">
+<a href="${pageContext.servletContext.contextPath}/user/orders/delete?order_id=${order.id}&delete_all_items=true">
     Очистить корзину
 </a>
 

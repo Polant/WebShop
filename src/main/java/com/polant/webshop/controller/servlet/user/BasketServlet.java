@@ -36,59 +36,52 @@ public class BasketServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
-        if (session != null && !session.isNew()) {
 
-            int lastOrderId = this.storage.checkNotPayedOrder((int)session.getAttribute("user_id"));
-            //Если в корзине есть товары.
-            if (lastOrderId > 0){
-                req.setAttribute(ORDER_ATTRIBUTE_JSP, storage.findOrderById(lastOrderId));
-                req.setAttribute(ORDER_GOODS_ATTRIBUTE_JSP, storage.getAllOrderInfo(lastOrderId));
-                req.setAttribute(IS_PAYED, false);
+        int lastOrderId = this.storage.checkNotPayedOrder((int) session.getAttribute("user_id"));
+        //Если в корзине есть товары.
+        if (lastOrderId > 0) {
+            req.setAttribute(ORDER_ATTRIBUTE_JSP, storage.findOrderById(lastOrderId));
+            req.setAttribute(ORDER_GOODS_ATTRIBUTE_JSP, storage.getAllOrderInfo(lastOrderId));
+            req.setAttribute(IS_PAYED, false);
 
-                req.getRequestDispatcher(JSP_PAGE).forward(req, resp);
-            }
-            else {//корзина пуста.
-                req.getRequestDispatcher(EMPTY_BASKET_JSP).forward(req, resp);
-            }
-        }
-        else{
-            //TODO: если пользователь не авторизовался, то перенаправить его на какой-то error.jsp.
+            req.getRequestDispatcher(JSP_PAGE).forward(req, resp);
+        } else {//корзина пуста.
+            req.getRequestDispatcher(EMPTY_BASKET_JSP).forward(req, resp);
         }
     }
+
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
-        if (session != null && !session.isNew()) {
+        List<ComplexOrderGoodsItem> goodsItems;//Все товары, которые прикреплены к заказу.
+        int orderId;
 
-            List<ComplexOrderGoodsItem> goodsItems;//Все товары, которые прикреплены к заказу.
-            int orderId;
-
-            //Если идет оплата платежа.
-            if (Boolean.valueOf(req.getParameter("pay_for_order"))) {
-                orderId = Integer.valueOf(req.getParameter("order_id"));
-                storage.payForOrder(orderId, true);
-                req.setAttribute(IS_PAYED, true);
-                goodsItems = storage.getAllOrderInfo(orderId);
-            }
-            else if (Boolean.valueOf(req.getParameter("cancel_pay_for_order"))) {//идет отмена оплаты.
-                orderId = Integer.valueOf(req.getParameter("order_id"));
-                storage.payForOrder(orderId, false);
-                req.setAttribute(IS_PAYED, false);
-                goodsItems = storage.getAllOrderInfo(orderId);
-            }
-            else {//Если идет добавка товара в корзину.
-                Good newGood = storage.findGoodById(Integer.valueOf(req.getParameter("good_id")));
-                goodsItems = addToBasket(req, session, newGood);
-
-                orderId = goodsItems.get(0).getOrderItem().getOrderId();
-                req.setAttribute(IS_PAYED, false);
-            }
-            req.setAttribute(ORDER_ATTRIBUTE_JSP, storage.findOrderById(orderId));
-            req.setAttribute(ORDER_GOODS_ATTRIBUTE_JSP, goodsItems);
-
-            req.getRequestDispatcher(JSP_PAGE).forward(req, resp);
+        //Если идет оплата платежа.
+        if (Boolean.valueOf(req.getParameter("pay_for_order"))) {
+            orderId = Integer.valueOf(req.getParameter("order_id"));
+            storage.payForOrder(orderId, true);
+            req.setAttribute(IS_PAYED, true);
+            goodsItems = storage.getAllOrderInfo(orderId);
         }
+        else if (Boolean.valueOf(req.getParameter("cancel_pay_for_order"))) {//идет отмена оплаты.
+            orderId = Integer.valueOf(req.getParameter("order_id"));
+            storage.payForOrder(orderId, false);
+            req.setAttribute(IS_PAYED, false);
+            goodsItems = storage.getAllOrderInfo(orderId);
+        }
+        else {//Если идет добавка товара в корзину.
+            Good newGood = storage.findGoodById(Integer.valueOf(req.getParameter("good_id")));
+            goodsItems = addToBasket(req, session, newGood);
+
+            orderId = goodsItems.get(0).getOrderItem().getOrderId();
+            req.setAttribute(IS_PAYED, false);
+        }
+        req.setAttribute(ORDER_ATTRIBUTE_JSP, storage.findOrderById(orderId));
+        req.setAttribute(ORDER_GOODS_ATTRIBUTE_JSP, goodsItems);
+
+        req.getRequestDispatcher(JSP_PAGE).forward(req, resp);
+
     }
 
 

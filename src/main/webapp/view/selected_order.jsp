@@ -47,7 +47,7 @@
 <br/><br/>
 
 <%--Но если заказ оплачен, то пользователь может только лишь его отменить--%>
-<a href="${pageContext.servletContext.contextPath}/user/basket/delete_order_item?order_id=${order.id}&delete_all_items=true&redirect_to_user_orders=true">
+<a href="${pageContext.servletContext.contextPath}/user/orders/delete?order_id=${order.id}&delete_all_items=true&redirect_to_user_orders=true">
     Отменить заказ
 </a>
 

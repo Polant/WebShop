@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * Сервлет, отвечающий за удаление заказа и соответствующих ему товаров.
  */
-@WebServlet("/user/basket/delete_order_item")
+@WebServlet("/user/orders/delete")
 public class DeleteOrdersServlet extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(DeleteOrdersServlet.class);
