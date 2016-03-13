@@ -21,8 +21,22 @@ public class AdminAddGoodsServlet extends HttpServlet {
 
     private final JdbcStorage storage = JdbcStorage.getInstance();
 
-    private final String[] colors = {"Красный", "Зеленый", "Синий","Черный", "Белый"};
-    private final String[] categories = {"Смартфон", "Планшет", "ПК","Ноутбук", "Телевизор"};
+    private final List<String> colors = new ArrayList<>();
+    private final List<String> categories = new ArrayList<>();
+
+    {
+        colors.add("Красный");
+        colors.add("Зеленый");
+        colors.add("Синий");
+        colors.add("Черный");
+        colors.add("Белый");
+
+        categories.add("Смартфон");
+        categories.add("Планшет");
+        categories.add("ПК");
+        categories.add("Ноутбук");
+        categories.add("Телевизор");
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -30,21 +44,15 @@ public class AdminAddGoodsServlet extends HttpServlet {
         String requestColor = req.getParameter("color");
         String requestCategory = req.getParameter("category");
 
-        if (requestColor == null) requestColor = colors[0];
-        if (requestCategory == null) requestCategory = categories[0];
+        if (requestColor == null) requestColor = colors.get(0);
+        if (requestCategory == null) requestCategory = categories.get(0);
 
-        List<String> colorsList = new ArrayList<>();
-        List<String> categoriesList = new ArrayList<>();
-
-        Collections.addAll(colorsList, colors);
-        Collections.addAll(categoriesList, categories);
-
-        req.setAttribute("colorsList", colorsList);
+        req.setAttribute("colorsList", colors);
         req.setAttribute("selectedColor", requestColor);
 
-        req.setAttribute("categoriesList", categoriesList);
+        req.setAttribute("categoriesList", categories);
         req.setAttribute("selectedCategory", requestCategory);
-        req.getRequestDispatcher("/view/admin_add_new_good.jsp").forward(req, resp);
+        req.getRequestDispatcher("/view/admin_goods_form.jsp").forward(req, resp);
     }
 
     @Override
