@@ -20,15 +20,7 @@ public class ComplexOrderGoodsItem {
         return orderGood;
     }
 
-    public void setOrderGood(Good orderGood) {
-        this.orderGood = orderGood;
-    }
-
     public OrderItem getOrderItem() {
         return orderItem;
-    }
-
-    public void setOrderItem(OrderItem orderItem) {
-        this.orderItem = orderItem;
     }
 }

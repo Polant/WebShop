@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- * Created by Antony on 06.03.2016.
+ * Через объект данного класса получается доступ с свойствам соединения с БД.
  */
 public class JdbcProperties {
 

@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by Antony on 10.03.2016.
+ * Сервлет, отвечающий за удаление заказа и соответствующих ему товаров.
  */
 @WebServlet("/user/basket/delete_order_item")
 public class DeleteOrdersServlet extends HttpServlet {

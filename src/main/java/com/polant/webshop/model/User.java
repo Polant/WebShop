@@ -1,7 +1,7 @@
 package com.polant.webshop.model;
 
 /**
- * Created by Antony on 05.03.2016.
+ * Сущность - 'Пользователь'
  */
 public class User {
 

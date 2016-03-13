@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by Antony on 08.03.2016.
+ * Сервлет, отвечающий за отображение информации о выбранном товаре.
  */
 @WebServlet("/good/show")
 public class GoodServlet extends HttpServlet {

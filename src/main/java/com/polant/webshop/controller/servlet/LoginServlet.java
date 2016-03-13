@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Created by Antony on 08.03.2016.
+ * Сервлет, отвечающий за авторизацию пользователей.
  */
 @WebServlet("/user/login")
 public class LoginServlet extends HttpServlet {

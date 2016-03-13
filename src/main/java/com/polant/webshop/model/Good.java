@@ -3,7 +3,7 @@ package com.polant.webshop.model;
 import java.util.Date;
 
 /**
- * Created by Antony on 05.03.2016.
+ * Сущность - 'Товар'
  */
 public class Good {
 

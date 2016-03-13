@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by Antony on 11.03.2016.
+ * Данный сервлет обрабатывает вывод заказов пользователя.
  */
 @WebServlet("/user/orders")
 public class UserOrdersServlet extends HttpServlet {
