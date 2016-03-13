@@ -21,12 +21,6 @@ public class JdbcStorage {
 
     private static final Logger LOGGER = Logger.getLogger(JdbcStorage.class);
 
-    public static final String TABLE_GOODS = "goods";
-    public static final String TABLE_ORDER_ITEMS = "order_items";
-    public static final String TABLE_ORDERS = "orders";
-    public static final String TABLE_PROVIDERS = "providers";
-    public static final String TABLE_USERS = "users";
-
     public static final String ORDER_REGISTERED = "зарегистрирован";
     public static final String ORDER_CANCELLED = "не подтвержден";
     public static final String ORDER_PAYED = "оплачен";
@@ -245,6 +239,9 @@ public class JdbcStorage {
         }
     }
 
+    /**
+     * После добавления нового товара в корзину уменьшаю его количество на складе.
+     */
     public void decreaseGoodCountLeft(Good good, int countDecrease){
         try(Connection connection = this.getConnection();
             PreparedStatement statement = connection.prepareStatement("UPDATE goods SET count_left=count_left-? WHERE id=?")) {
@@ -363,6 +360,10 @@ public class JdbcStorage {
         return false;
     }
 
+    /**
+     * После удаления заказа нужно прибавить к значению атрибута count_left (таблицы goods) товаров удаляемого заказа
+     * соответствующие значения (quantity) удаляемых предметов заказа.
+     */
     public void increaseCountLeftGoodsAfterDeletingOrder(int orderId){
         try(Connection connection = this.getConnection();
             PreparedStatement statement = connection.prepareStatement("UPDATE goods SET count_left=count_left+? WHERE id=?")) {
@@ -572,6 +573,9 @@ public class JdbcStorage {
         }
     }
 
+    /**
+     * @return true if update run successfully.
+     */
     public boolean editGood(int id, String name, String description, double price, String category, String color, int providerId,
                             String manufacturerName, String manufacturingDate, String deliveryDate, int countLeft) {
         try (Connection connection = this.getConnection();
