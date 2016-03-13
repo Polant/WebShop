@@ -5,6 +5,7 @@ import com.polant.webshop.model.Order;
 import com.polant.webshop.model.OrderItem;
 import com.polant.webshop.model.User;
 import com.polant.webshop.model.complex.ComplexOrderGoodsItem;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -19,6 +20,8 @@ public class JdbcStorage {
 
     private JdbcProperties prop = JdbcProperties.getInstance();
 
+    private BasicDataSource connectionPool;
+
     private static final Logger LOGGER = Logger.getLogger(JdbcStorage.class);
 
     public static final String ORDER_REGISTERED = "зарегистрирован";
@@ -27,11 +30,12 @@ public class JdbcStorage {
     public static final String ORDER_REVOKED = "отменен";
 
     private JdbcStorage(){
-        try {
-            Class.forName(prop.getProperty("jdbc.driver_class"));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        connectionPool = new BasicDataSource();
+        connectionPool.setUrl(prop.getProperty("jdbc.url"));
+        connectionPool.setUsername(prop.getProperty("jdbc.username"));
+        connectionPool.setPassword(prop.getProperty("jdbc.password"));
+        connectionPool.setDriverClassName(prop.getProperty("jdbc.driver_class"));
+        connectionPool.setInitialSize(10);
     }
 
     public static JdbcStorage getInstance(){
@@ -39,9 +43,7 @@ public class JdbcStorage {
     }
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(prop.getProperty("jdbc.url"),
-                    prop.getProperty("jdbc.username"),
-                    prop.getProperty("jdbc.password"));
+        return connectionPool.getConnection();
     }
 
     public String getORDER_REGISTERED() {
@@ -419,12 +421,16 @@ public class JdbcStorage {
         try(Connection connection = this.getConnection(); Statement statement = connection.createStatement()){
 
             String stock;
-            if (inStock.equals("in_stock")){
-                stock = "count_left>0";
-            }else if (inStock.equals("not_in_stock")){
-                stock = "count_left=0";
-            }else {//В наличии и не в наличии.
-                stock = "count_left>=0";
+            switch (inStock) {
+                case "in_stock":
+                    stock = "count_left>0";
+                    break;
+                case "not_in_stock":
+                    stock = "count_left=0";
+                    break;
+                default: //В наличии и не в наличии.
+                    stock = "count_left>=0";
+                    break;
             }
 
             StringBuilder sql = new StringBuilder("SELECT * FROM goods WHERE LOWER(name) LIKE '%").append(name.toLowerCase()).append("%' ");
