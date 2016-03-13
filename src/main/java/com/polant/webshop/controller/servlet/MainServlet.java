@@ -43,8 +43,8 @@ public class MainServlet extends HttpServlet {
         String name = request.getParameter("name_goods");
 
         String[] categories = request.getParameterValues("category");
-        int priceFrom = Integer.valueOf(request.getParameter("price_from"));
-        int priceTo = Integer.valueOf(request.getParameter("price_to"));
+        double priceFrom = Double.valueOf(request.getParameter("price_from"));
+        double priceTo = Double.valueOf(request.getParameter("price_to"));
         String inStock = request.getParameter("is_in_stock");
         String[] colors = request.getParameterValues("color");
 

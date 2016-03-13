@@ -411,7 +411,7 @@ public class JdbcStorage {
         return result;
     }
 
-    public List<Good> filterGoods(String name, String[] categories, int priceFrom, int priceTo, String inStock, String[] colors,
+    public List<Good> filterGoods(String name, String[] categories, double priceFrom, double priceTo, String inStock, String[] colors,
                                   String orderByName, String orderByPrice, String orderByDate) {
         List<Good> result = new ArrayList<>();
 
