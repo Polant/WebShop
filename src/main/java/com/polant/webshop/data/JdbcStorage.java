@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.*;
-import java.util.Date;
 
 /**
  * Данный класс является классом-оберткой над базой данных. Содержит все необходимые методы для работы с БД.
@@ -637,5 +636,22 @@ public class JdbcStorage {
         return false;
     }
 
-    //--------------------------------//
+    //------------------------------------//
+
+    /**
+     * @param isBanned - true if admin banned user with userId
+     * @return if update run successfully
+     */
+    public boolean setUserBanned(int userId, boolean isBanned) {
+        try(Connection connection = this.getConnection();
+            PreparedStatement statement = connection.prepareStatement("UPDATE users SET isBanned=? WHERE id=?")) {
+
+            statement.setBoolean(1, isBanned);
+            statement.setInt(2, userId);
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
