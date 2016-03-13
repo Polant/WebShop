@@ -18,10 +18,6 @@ public class JdbcStorage {
 
     private static final JdbcStorage INSTANCE = new JdbcStorage();
 
-    private JdbcProperties prop = JdbcProperties.getInstance();
-
-    private BasicDataSource connectionPool;
-
     private static final Logger LOGGER = Logger.getLogger(JdbcStorage.class);
 
     public static final String ORDER_REGISTERED = "зарегистрирован";
@@ -29,13 +25,17 @@ public class JdbcStorage {
     public static final String ORDER_PAYED = "оплачен";
     public static final String ORDER_REVOKED = "отменен";
 
+    private final BasicDataSource connectionPool;
+
     private JdbcStorage(){
+        JdbcProperties jdbcProperties = JdbcProperties.getInstance();
+
         connectionPool = new BasicDataSource();
-        connectionPool.setUrl(prop.getProperty("jdbc.url"));
-        connectionPool.setUsername(prop.getProperty("jdbc.username"));
-        connectionPool.setPassword(prop.getProperty("jdbc.password"));
-        connectionPool.setDriverClassName(prop.getProperty("jdbc.driver_class"));
-        connectionPool.setInitialSize(10);
+        connectionPool.setUrl(jdbcProperties.getProperty("jdbc.url"));
+        connectionPool.setUsername(jdbcProperties.getProperty("jdbc.username"));
+        connectionPool.setPassword(jdbcProperties.getProperty("jdbc.password"));
+        connectionPool.setDriverClassName(jdbcProperties.getProperty("jdbc.driver_class"));
+        connectionPool.setInitialSize(20);
     }
 
     public static JdbcStorage getInstance(){
