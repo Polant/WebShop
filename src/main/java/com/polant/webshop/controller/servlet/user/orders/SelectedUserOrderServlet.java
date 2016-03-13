@@ -31,7 +31,7 @@ public class SelectedUserOrderServlet extends HttpServlet {
 
         req.setAttribute(ORDER_ATTRIBUTE_JSP, order);
         req.setAttribute(ORDER_GOODS_ATTRIBUTE_JSP, storage.getAllOrderInfo(orderId));
-        req.setAttribute(IS_PAYED, order.getStatus().equals(JdbcStorage.ORDER_REGISTERED));
+        req.setAttribute(IS_PAYED, !order.getStatus().equals(JdbcStorage.ORDER_CANCELLED));
 
         req.getRequestDispatcher(JSP_PAGE).forward(req, resp);
     }

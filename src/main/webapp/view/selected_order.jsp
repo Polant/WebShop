@@ -8,7 +8,7 @@
 
 <jsp:include page="header.jsp" />
 
-<h2>Моя корзина</h2>
+<h2>Мои заказы</h2>
 
 <h3>Заказ № ${order.id}</h3>
 
